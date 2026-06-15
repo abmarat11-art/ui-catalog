@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UI Каталог — Дима</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0f0f13;
+      --surface: #1a1a24;
+      --border: #2a2a38;
+      --text: #e8e8f0;
+      --muted: #888899;
+      --accent: #6c63ff;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      min-height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      padding: 24px 40px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+    header span { color: var(--muted); font-size: 14px; }
+
+    /* ===== LAYOUT ===== */
+    .container { display: flex; min-height: calc(100vh - 73px); }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      width: 220px;
+      border-right: 1px solid var(--border);
+      padding: 24px 0;
+      flex-shrink: 0;
+    }
+    .sidebar-label {
+      padding: 0 20px 8px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+    }
+    .nav-item {
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--muted);
+      border-left: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    .nav-item:hover { color: var(--text); background: var(--surface); }
+    .nav-item.active { color: var(--text); border-left-color: var(--accent); background: var(--surface); }
+
+    /* ===== MAIN ===== */
+    .main { flex: 1; padding: 40px; overflow-y: auto; }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .section-desc {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+
+    /* ===== GRID ===== */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
+    /* ===== CARD ===== */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.15s;
+      position: relative;
+    }
+    .card:hover { border-color: #44445a; transform: translateY(-1px); }
+    .card.selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+
+    .card-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+    .card-name { font-size: 14px; font-weight: 600; margin-top: 2px; }
+
+    .check {
+      position: absolute;
+      top: 12px; right: 12px;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+    .card.selected .check { display: flex; }
+
+    /* ===== COLORS ===== */
+    .color-swatch {
+      height: 80px;
+      border-radius: 8px;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 56px;
+    }
+    .demo-btn {
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: default;
+      letter-spacing: 0.3px;
+    }
+    .demo-btn.style-rounded { border-radius: 100px; }
+    .demo-btn.style-square { border-radius: 4px; }
+    .demo-btn.style-soft { border-radius: 10px; }
+
+    .demo-btn.fill-solid { border: none; color: #fff; background: var(--accent); }
+    .demo-btn.fill-outline { border: 2px solid var(--accent); background: transparent; color: var(--accent); }
+    .demo-btn.fill-ghost { border: none; background: rgba(108,99,255,0.15); color: var(--accent); }
+
+    .demo-btn.effect-shadow { box-shadow: 0 4px 20px rgba(108,99,255,0.5); }
+    .demo-btn.effect-glow { box-shadow: 0 0 16px rgba(108,99,255,0.7); }
+
+    /* ===== FONTS ===== */
+    .font-preview {
+      font-size: 28px;
+      font-weight: 700;
+      padding: 16px 0 8px;
+    }
+    .font-sub { font-size: 14px; color: var(--muted); }
+
+    /* ===== RADIUS ===== */
+    .radius-demo {
+      height: 60px;
+      background: var(--accent);
+      opacity: 0.7;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    .anim-box {
+      height: 60px;
+      background: var(--accent);
+      border-radius: 8px;
+      opacity: 0.7;
+    }
+    @keyframes pulse { 0%,100%{opacity:0.7} 50%{opacity:1} }
+    @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+    @keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+    @keyframes slide { 0%,100%{transform:translateX(0)} 50%{transform:translateX(10px)} }
+    @keyframes scale { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+
+    .anim-pulse .anim-box { animation: pulse 2s infinite; }
+    .anim-bounce .anim-box { animation: bounce 1.2s infinite; }
+    .anim-spin .anim-box { animation: spin 2s linear infinite; border-radius: 50%; height: 50px; width: 50px; margin: 5px auto; }
+    .anim-slide .anim-box { animation: slide 1.5s ease-in-out infinite; }
+    .anim-scale .anim-box { animation: scale 1.5s ease-in-out infinite; }
+
+    /* ===== PRESET PANEL ===== */
+    .preset-bar {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: #13131c;
+      border-top: 1px solid var(--border);
+      padding: 16px 40px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 100;
+    }
+    .preset-bar-label { font-size: 13px; color: var(--muted); flex: 1; }
+    .preset-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip {
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    .save-btn {
+      padding: 10px 24px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .save-btn:hover { opacity: 0.85; }
+    .copy-btn {
+      padding: 10px 16px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .copy-btn:hover { color: var(--text); border-color: #44445a; }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      top: 24px; right: 24px;
+      background: #222232;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 20px;
+      font-size: 14px;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: all 0.2s;
+      z-index: 999;
+      max-width: 340px;
+      word-break: break-all;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    main { padding-bottom: 80px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>UI Каталог</h1>
+  <span>Выбери стиль → Сохрани пресет → Отдай Диме</span>
+</header>
+
+<div class="container">
+  <nav class="sidebar">
+    <div class="sidebar-label">Разделы</div>
+    <div class="nav-item active" data-section="colors">🎨 Цвета</div>
+    <div class="nav-item" data-section="buttons">🔘 Кнопки</div>
+    <div class="nav-item" data-section="fonts">✏️ Шрифты</div>
+    <div class="nav-item" data-section="radius">📐 Углы</div>
+    <div class="nav-item" data-section="animations">✨ Анимации</div>
+  </nav>
+
+  <main class="main">
+
+    <!-- COLORS -->
+    <section class="section active" id="colors">
+      <div class="section-title">Цвета</div>
+      <div class="section-desc">Выбери основной цвет для сайта</div>
+      <div class="grid" id="color-grid"></div>
+    </section>
+
+    <!-- BUTTONS -->
+    <section class="section" id="buttons">
+      <div class="section-title">Кнопки</div>
+      <div class="section-desc">Выбери стиль кнопок</div>
+      <div class="grid-2" id="button-grid"></div>
+    </section>
+
+    <!-- FONTS -->
+    <section class="section" id="fonts">
+      <div class="section-title">Шрифты</div>
+      <div class="section-desc">Выбери шрифт для заголовков</div>
+      <div class="grid-2" id="font-grid"></div>
+    </section>
+
+    <!-- RADIUS -->
+    <section class="section" id="radius">
+      <div class="section-title">Углы</div>
+      <div class="section-desc">Насколько округлые элементы</div>
+      <div class="grid" id="radius-grid"></div>
+    </section>
+
+    <!-- ANIMATIONS -->
+    <section class="section" id="animations">
+      <div class="section-title">Анимации</div>
+      <div class="section-desc">Выбери эффект движения</div>
+      <div class="grid" id="anim-grid"></div>
+    </section>
+
+  </main>
+</div>
+
+<!-- PRESET BAR -->
+<div class="preset-bar">
+  <div>
+    <div class="preset-bar-label">Твой пресет:</div>
+    <div class="preset-chips" id="preset-chips"><span style="color:#444;font-size:12px">Ничего не выбрано</span></div>
+  </div>
+  <button class="copy-btn" onclick="copyPreset()">Скопировать</button>
+  <button class="save-btn" onclick="savePreset()">💾 Сохранить пресет</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const COLORS = [
+  { name: 'Фиолетовый', hex: '#6c63ff' },
+  { name: 'Синий', hex: '#3b82f6' },
+  { name: 'Голубой', hex: '#06b6d4' },
+  { name: 'Зелёный', hex: '#22c55e' },
+  { name: 'Оранжевый', hex: '#f97316' },
+  { name: 'Розовый', hex: '#ec4899' },
+  { name: 'Красный', hex: '#ef4444' },
+  { name: 'Жёлтый', hex: '#eab308' },
+  { name: 'Серо-синий', hex: '#64748b' },
+  { name: 'Мятный', hex: '#10b981' },
+  { name: 'Индиго', hex: '#4f46e5' },
+  { name: 'Лиловый', hex: '#a855f7' },
+];
+
+const BUTTONS = [
+  { name: 'Округлый, заливка', cls: 'style-rounded fill-solid' },
+  { name: 'Округлый, контур', cls: 'style-rounded fill-outline' },
+  { name: 'Округлый, призрак', cls: 'style-rounded fill-ghost' },
+  { name: 'Мягкий, заливка', cls: 'style-soft fill-solid' },
+  { name: 'Мягкий, контур', cls: 'style-soft fill-outline' },
+  { name: 'Квадратный, заливка', cls: 'style-square fill-solid' },
+  { name: 'Мягкий + тень', cls: 'style-soft fill-solid effect-shadow' },
+  { name: 'Округлый + свечение', cls: 'style-rounded fill-solid effect-glow' },
+];
+
+const FONTS = [
+  { name: 'Inter', css: 'Inter, sans-serif' },
+  { name: 'Georgia', css: 'Georgia, serif' },
+  { name: 'Courier New', css: "'Courier New', monospace" },
+  { name: 'Trebuchet', css: 'Trebuchet MS, sans-serif' },
+  { name: 'Palatino', css: 'Palatino, serif' },
+  { name: 'Arial', css: 'Arial, sans-serif' },
+];
+
+const RADIUS = [
+  { name: 'Острые углы', px: '0px' },
+  { name: 'Чуть округлые', px: '4px' },
+  { name: 'Мягкие', px: '8px' },
+  { name: 'Округлые', px: '12px' },
+  { name: 'Очень округлые', px: '20px' },
+  { name: 'Капсула', px: '100px' },
+];
+
+const ANIMS = [
+  { name: 'Пульсация', cls: 'anim-pulse' },
+  { name: 'Прыжок', cls: 'anim-bounce' },
+  { name: 'Вращение', cls: 'anim-spin' },
+  { name: 'Слайд', cls: 'anim-slide' },
+  { name: 'Масштаб', cls: 'anim-scale' },
+];
+
+let preset = {};
+
+function pick(category, key, label) {
+  preset[category] = { key, label };
+  updatePresetBar();
+}
+
+function makeCard(id, html, label, name, onSelect) {
+  const d = document.createElement('div');
+  d.className = 'card';
+  d.id = id;
+  d.innerHTML = html + `<div class="card-label">${label}</div><div class="card-name">${name}</div><div class="check">✓</div>`;
+  d.onclick = () => {
+    document.querySelectorAll(`[data-group="${label}"]`).forEach(el => el.classList.remove('selected'));
+    d.classList.add('selected');
+    onSelect();
+  };
+  d.dataset.group = label;
+  return d;
+}
+
+// Build colors
+const cg = document.getElementById('color-grid');
+COLORS.forEach((c, i) => {
+  const card = makeCard('c'+i,
+    `<div class="color-swatch" style="background:${c.hex}"></div>`,
+    'Цвет', c.name,
+    () => pick('color', c.hex, c.name)
+  );
+  cg.appendChild(card);
+});
+
+// Build buttons
+const bg = document.getElementById('button-grid');
+BUTTONS.forEach((b, i) => {
+  const card = makeCard('b'+i,
+    `<div class="btn-preview"><button class="demo-btn ${b.cls}">Кнопка</button></div>`,
+    'Кнопка', b.name,
+    () => pick('button', b.cls, b.name)
+  );
+  card.dataset.group = 'Кнопка';
+  bg.appendChild(card);
+});
+
+// Build fonts
+const fg = document.getElementById('font-grid');
+FONTS.forEach((f, i) => {
+  const card = makeCard('f'+i,
+    `<div class="font-preview" style="font-family:${f.css}">Заголовок</div><div class="font-sub" style="font-family:${f.css}">Текст сайта</div>`,
+    'Шрифт', f.name,
+    () => pick('font', f.css, f.name)
+  );
+  fg.appendChild(card);
+});
+
+// Build radius
+const rg = document.getElementById('radius-grid');
+RADIUS.forEach((r, i) => {
+  const card = makeCard('r'+i,
+    `<div class="radius-demo" style="border-radius:${r.px}"></div>`,
+    'Углы', r.name,
+    () => pick('radius', r.px, r.name)
+  );
+  rg.appendChild(card);
+});
+
+// Build animations
+const ag = document.getElementById('anim-grid');
+ANIMS.forEach((a, i) => {
+  const card = makeCard('a'+i,
+    `<div class="${a.cls}"><div class="anim-box"></div></div>`,
+    'Анимация', a.name,
+    () => pick('animation', a.cls, a.name)
+  );
+  ag.appendChild(card);
+});
+
+// Nav
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.onclick = () => {
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    item.classList.add('active');
+    document.getElementById(item.dataset.section).classList.add('active');
+  };
+});
+
+function updatePresetBar() {
+  const chips = document.getElementById('preset-chips');
+  const entries = Object.entries(preset);
+  if (entries.length === 0) {
+    chips.innerHTML = '<span style="color:#444;font-size:12px">Ничего не выбрано</span>';
+    return;
+  }
+  chips.innerHTML = entries.map(([cat, v]) =>
+    `<span class="chip">${getCatName(cat)}: ${v.label}</span>`
+  ).join('');
+}
+
+function getCatName(cat) {
+  return { color: '🎨', button: '🔘', font: '✏️', radius: '📐', animation: '✨' }[cat] || cat;
+}
+
+function getPresetText() {
+  const entries = Object.entries(preset);
+  if (entries.length === 0) return 'Пресет пустой — выбери хотя бы что-нибудь';
+  const lines = entries.map(([cat, v]) => `${getCatName(cat)} ${v.label}`);
+  return '🎨 Пресет:\n' + lines.join('\n');
+}
+
+function showToast(msg, duration = 3000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+function copyPreset() {
+  const text = getPresetText();
+  navigator.clipboard.writeText(text).then(() => showToast('Скопировано! Отправь это Диме'));
+}
+
+function savePreset() {
+  const entries = Object.entries(preset);
+  if (entries.length === 0) { showToast('Сначала выбери хотя бы что-нибудь'); return; }
+  const text = getPresetText();
+  const blob = new Blob([text], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'preset.txt'; a.click();
+  showToast('Пресет сохранён! Отправь файл Диме 📎');
+}
+</script>
+
+</body>
+</html>
