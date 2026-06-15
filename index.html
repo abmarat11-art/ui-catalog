@@ -3,585 +3,989 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UI Каталог — Дима</title>
+  <title>Demo Builder — Дима</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #0f0f13;
-      --surface: #1a1a24;
-      --border: #2a2a38;
-      --text: #e8e8f0;
-      --muted: #888899;
-      --accent: #6c63ff;
-      --btn-radius: 100px;
-      --border-radius: 8px;
-      --font-family: 'Segoe UI', system-ui, sans-serif;
-      --title-font-family: 'Segoe UI', system-ui, sans-serif;
+      --bg: #f0f2f5;
+      --panel-bg: #ffffff;
+      --panel-border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+      --accent: #6366f1;
+      --accent-text: #ffffff;
+
+      /* Demo app colors */
+      --d-bg: #f8fafc;
+      --d-sidebar: #1e293b;
+      --d-sidebar-text: #cbd5e1;
+      --d-sidebar-active: #6366f1;
+      --d-header: #ffffff;
+      --d-header-border: #e2e8f0;
+      --d-card: #ffffff;
+      --d-card-border: #e2e8f0;
+      --d-text: #1e293b;
+      --d-muted: #64748b;
+      --d-accent: #6366f1;
+      --d-badge: #ef4444;
+      --d-success: #22c55e;
+      --d-warning: #f59e0b;
+      --d-info: #3b82f6;
+      --d-nav-bg: #1e293b;
+      --d-nav-text: #94a3b8;
+      --d-nav-active-bg: rgba(99,102,241,0.15);
+      --d-nav-active-text: #6366f1;
     }
 
     body {
       background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-family);
-      min-height: 100vh;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    select {
-      background-color: var(--bg);
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: var(--border-radius);
-      font-family: var(--font-family);
-      font-size: 13px;
-      padding: 8px 10px;
-    }
-
-    /* ===== LAYOUT ===== */
-    .wrapper { display: flex; min-height: 100vh; }
-
-    /* ===== LEFT PANEL (CONTROLS) ===== */
-    .control-panel {
-      width: 320px;
-      background: var(--bg);
-      border-right: 1px solid var(--border);
-      padding: 24px 16px;
+    /* ===== LEFT PANEL ===== */
+    .builder-panel {
+      width: 190px;
+      min-width: 190px;
+      background: var(--panel-bg);
+      border-right: 1px solid var(--panel-border);
+      display: flex;
+      flex-direction: column;
       overflow-y: auto;
-      flex-shrink: 0;
+      z-index: 10;
     }
 
-    .panel-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-top: 20px; margin-bottom: 12px; font-weight: 700; }
-    .panel-title:first-child { margin-top: 0; }
-
-    .control-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 4px;
+    .builder-header {
+      padding: 16px 14px 10px;
+      border-bottom: 1px solid var(--panel-border);
     }
-
-    .color-btn {
-      height: 44px;
-      border-radius: 8px;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: all 0.15s;
-      font-size: 12px;
-      font-weight: 600;
-    }
-    .color-btn:hover { border-color: var(--text); transform: scale(1.02); }
-    .color-btn.selected { border-color: var(--text); box-shadow: 0 0 0 3px rgba(255,255,255,0.1); }
-
-    .select-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .select-item {
-      padding: 12px 12px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      cursor: pointer;
+    .builder-logo {
       font-size: 13px;
-      transition: all 0.15s;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.2px;
     }
-    .select-item:hover { border-color: #44445a; }
-    .select-item.selected { background: rgba(108,99,255,0.2); border-color: var(--accent); }
+    .builder-subtitle {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
 
-    /* ===== RIGHT PANEL (DEMO) ===== */
-    .demo-panel {
+    .builder-section {
+      padding: 10px 14px 4px;
+    }
+
+    .section-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    /* Style cards */
+    .style-cards {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .style-card {
       flex: 1;
-      background: var(--bg);
-      overflow: auto;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
+      min-width: 46px;
+      padding: 8px 6px;
+      border-radius: 8px;
+      border: 2px solid var(--panel-border);
+      cursor: pointer;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted);
+      transition: all 0.15s;
+      background: var(--panel-bg);
     }
-
-    /* ===== ACCOUNT DEMO UI ===== */
-    .account-ui {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      background: var(--bg);
+    .style-card .style-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      margin: 0 auto 4px;
     }
+    .style-card:hover { border-color: var(--accent); color: var(--accent); }
+    .style-card.active { border-color: var(--accent); color: var(--accent); background: rgba(99,102,241,0.06); }
 
-    .account-header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 24px;
+    /* Sphere select */
+    .sphere-select {
+      width: 100%;
+      padding: 7px 8px;
+      font-size: 11px;
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      background: var(--panel-bg);
+      color: var(--text);
+      font-family: inherit;
+      cursor: pointer;
+      outline: none;
+    }
+    .sphere-select:focus { border-color: var(--accent); }
+
+    /* Toggle rows */
+    .toggle-list { display: flex; flex-direction: column; gap: 1px; }
+    .toggle-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      padding: 5px 0;
+      border-bottom: 1px solid #f1f5f9;
     }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-info { display: flex; align-items: center; gap: 6px; }
+    .toggle-icon { font-size: 13px; }
+    .toggle-name { font-size: 11px; color: var(--text); font-weight: 500; }
+    .toggle-desc { font-size: 9px; color: var(--muted); }
 
-    .account-header-title { font-size: 18px; font-weight: 700; font-family: var(--title-font-family); }
-    .account-header-btn {
-      padding: 8px 16px;
+    .toggle-switch {
+      width: 30px;
+      height: 16px;
+      background: #cbd5e1;
+      border-radius: 100px;
+      position: relative;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-shrink: 0;
+      border: none;
+      outline: none;
+    }
+    .toggle-switch::after {
+      content: '';
+      width: 12px;
+      height: 12px;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      transition: left 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .toggle-switch.on { background: var(--accent); }
+    .toggle-switch.on::after { left: 16px; }
+
+    /* Open button */
+    .builder-footer {
+      margin-top: auto;
+      padding: 12px 14px;
+      border-top: 1px solid var(--panel-border);
+    }
+    .open-btn {
+      width: 100%;
+      padding: 9px 12px;
       background: var(--accent);
       color: white;
       border: none;
-      border-radius: var(--btn-radius);
-      cursor: default;
-      font-size: 13px;
+      border-radius: 8px;
+      font-size: 12px;
       font-weight: 600;
-      font-family: var(--font-family);
+      cursor: pointer;
+      font-family: inherit;
+      transition: opacity 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
+    .open-btn:hover { opacity: 0.85; }
 
-    .account-content {
+    /* ===== RIGHT DEMO AREA ===== */
+    .demo-area {
       flex: 1;
-      padding: 32px 24px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-    }
-
-    .account-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--border-radius);
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
       padding: 20px;
     }
 
-    .account-card-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; font-family: var(--title-font-family); }
-
-    .account-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 14px;
-    }
-    .account-item:last-child { border-bottom: none; }
-
-    .account-label { color: var(--muted); }
-    .account-value { font-weight: 600; }
-
-    .account-form {
+    .demo-window {
+      width: 100%;
+      max-width: 860px;
+      height: calc(100vh - 40px);
+      max-height: 700px;
+      background: var(--d-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08);
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      overflow: hidden;
     }
 
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-label { font-size: 13px; font-weight: 600; }
-    .form-input {
-      padding: 10px 12px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: var(--border-radius);
-      color: var(--text);
-      font-size: 13px;
-      font-family: var(--font-family);
-    }
-    .form-input:focus { outline: none; border-color: var(--accent); }
-
-    .form-btn {
-      padding: 10px 16px;
-      background: var(--accent);
-      color: white;
-      border: none;
-      border-radius: var(--btn-radius);
-      cursor: default;
-      font-size: 13px;
-      font-weight: 600;
-      margin-top: 8px;
-      font-family: var(--font-family);
-    }
-
-    /* ===== PRESET BAR ===== */
-    .preset-bar {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: #13131c;
-      border-top: 1px solid var(--border);
-      padding: 16px 24px;
+    /* Demo top nav */
+    .d-nav {
+      background: var(--d-nav-bg);
       display: flex;
       align-items: center;
-      gap: 16px;
-      z-index: 100;
+      padding: 0 16px;
+      height: 44px;
+      flex-shrink: 0;
+      gap: 4px;
     }
-
-    .preset-chips { display: flex; gap: 8px; flex-wrap: wrap; }
-    .chip {
-      padding: 4px 12px;
-      border-radius: 100px;
-      font-size: 12px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
+    .d-nav-logo {
+      font-size: 13px;
+      font-weight: 700;
+      color: white;
+      margin-right: 12px;
+      white-space: nowrap;
     }
-
-    .save-btn {
-      padding: 10px 24px;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
+    .d-nav-items { display: flex; gap: 2px; flex: 1; overflow: hidden; }
+    .d-nav-item {
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      color: var(--d-nav-text);
       cursor: pointer;
-      transition: opacity 0.15s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s;
+    }
+    .d-nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
+    .d-nav-item.active { background: var(--d-nav-active-bg); color: var(--d-nav-active-text); }
+    .d-nav-badge {
+      background: var(--d-badge);
+      color: white;
+      border-radius: 100px;
+      font-size: 9px;
+      padding: 1px 5px;
+      font-weight: 700;
+    }
+    .d-nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       margin-left: auto;
     }
-    .save-btn:hover { opacity: 0.85; }
-
-    /* ===== TOAST ===== */
-    .toast {
-      position: fixed;
-      top: 24px; right: 24px;
-      background: #222232;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px 20px;
-      font-size: 14px;
-      opacity: 0;
-      transform: translateY(-8px);
-      transition: all 0.2s;
-      z-index: 999;
+    .d-nav-search {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 11px;
+      color: #94a3b8;
+      width: 110px;
     }
-    .toast.show { opacity: 1; transform: translateY(0); }
+    .d-nav-notif {
+      width: 28px; height: 28px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      cursor: pointer;
+      position: relative;
+    }
+    .d-nav-notif-badge {
+      position: absolute;
+      top: 2px; right: 2px;
+      width: 7px; height: 7px;
+      background: var(--d-badge);
+      border-radius: 50%;
+      border: 1px solid var(--d-nav-bg);
+    }
+    .d-nav-avatar {
+      width: 26px; height: 26px;
+      background: var(--d-accent);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: white;
+    }
 
-    .account-content { padding-bottom: 100px; }
+    /* Demo sub-header (breadcrumb) */
+    .d-subheader {
+      background: var(--d-header);
+      border-bottom: 1px solid var(--d-header-border);
+      padding: 8px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .d-breadcrumb { font-size: 11px; color: var(--d-muted); }
+    .d-breadcrumb strong { color: var(--d-text); }
+    .d-subheader-btn {
+      padding: 6px 14px;
+      background: var(--d-accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* Demo content */
+    .d-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 20px;
+    }
+
+    .d-page-title { font-size: 18px; font-weight: 700; color: var(--d-text); margin-bottom: 2px; }
+    .d-page-sub { font-size: 11px; color: var(--d-muted); margin-bottom: 16px; }
+
+    /* KPI cards */
+    .d-kpi-row { display: flex; gap: 12px; margin-bottom: 16px; }
+    .d-kpi {
+      flex: 1;
+      background: var(--d-card);
+      border: 1px solid var(--d-card-border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      position: relative;
+    }
+    .d-kpi-icon {
+      position: absolute;
+      top: 12px; right: 12px;
+      font-size: 18px;
+      opacity: 0.3;
+    }
+    .d-kpi-label { font-size: 10px; color: var(--d-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .d-kpi-value { font-size: 26px; font-weight: 700; color: var(--d-text); line-height: 1; margin-bottom: 4px; }
+    .d-kpi-delta { font-size: 10px; }
+    .d-kpi-delta.up { color: var(--d-success); }
+    .d-kpi-delta.down { color: var(--d-badge); }
+    .d-kpi-delta.neutral { color: var(--d-muted); }
+
+    /* Two-column layout */
+    .d-two-col { display: flex; gap: 12px; }
+    .d-col-main { flex: 1; min-width: 0; }
+    .d-col-side { width: 220px; flex-shrink: 0; }
+
+    /* Table */
+    .d-card {
+      background: var(--d-card);
+      border: 1px solid var(--d-card-border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .d-card-header {
+      padding: 12px 16px 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--d-text);
+      border-bottom: 1px solid var(--d-card-border);
+    }
+    .d-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .d-table th {
+      text-align: left;
+      padding: 8px 12px;
+      color: var(--d-muted);
+      font-weight: 600;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      border-bottom: 1px solid var(--d-card-border);
+    }
+    .d-table td {
+      padding: 9px 12px;
+      color: var(--d-text);
+      border-bottom: 1px solid #f8fafc;
+    }
+    .d-table tr:last-child td { border-bottom: none; }
+    .d-table tr:hover td { background: #f8fafc; }
+
+    .d-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 100px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+    .d-badge.green { background: #dcfce7; color: #16a34a; }
+    .d-badge.blue { background: #dbeafe; color: #1d4ed8; }
+    .d-badge.yellow { background: #fef9c3; color: #a16207; }
+    .d-badge.red { background: #fee2e2; color: #dc2626; }
+    .d-badge.gray { background: #f1f5f9; color: #64748b; }
+
+    /* Activity feed */
+    .d-activity-list { display: flex; flex-direction: column; }
+    .d-activity-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--d-card-border);
+    }
+    .d-activity-item:last-child { border-bottom: none; }
+    .d-activity-dot {
+      width: 26px; height: 26px;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .d-activity-dot.green { background: #dcfce7; }
+    .d-activity-dot.blue { background: #dbeafe; }
+    .d-activity-dot.yellow { background: #fef9c3; }
+    .d-activity-body { min-width: 0; }
+    .d-activity-title { font-size: 11px; font-weight: 600; color: var(--d-text); }
+    .d-activity-sub { font-size: 10px; color: var(--d-muted); margin-top: 1px; }
+
+    /* ===== STYLE THEMES ===== */
+
+    /* Tech (dark) */
+    body.theme-tech {
+      --bg: #0d1117;
+      --panel-bg: #161b22;
+      --panel-border: #21262d;
+      --text: #e6edf3;
+      --muted: #7d8590;
+      --accent: #58a6ff;
+    }
+    body.theme-tech .d-nav { background: #161b22; border-bottom: 1px solid #21262d; }
+    body.theme-tech .d-nav-search { background: rgba(255,255,255,0.05); border-color: #21262d; }
+    body.theme-tech { --d-bg: #0d1117; --d-header: #161b22; --d-header-border: #21262d; --d-card: #161b22; --d-card-border: #21262d; --d-text: #e6edf3; --d-muted: #7d8590; --d-accent: #58a6ff; --d-nav-bg: #010409; }
+    body.theme-tech .d-table tr:hover td { background: #1c2128; }
+    body.theme-tech .d-table td { border-bottom-color: #21262d; }
+    body.theme-tech .d-badge.green { background: #0d2818; color: #3fb950; }
+    body.theme-tech .d-badge.blue { background: #0c1d36; color: #58a6ff; }
+    body.theme-tech .d-badge.yellow { background: #272115; color: #e3b341; }
+    body.theme-tech .d-badge.gray { background: #21262d; color: #7d8590; }
+    body.theme-tech .builder-panel { background: #161b22; border-color: #21262d; }
+    body.theme-tech .section-label { color: #7d8590; }
+    body.theme-tech .toggle-row { border-color: #21262d; }
+    body.theme-tech .toggle-name { color: #e6edf3; }
+    body.theme-tech .sphere-select { background: #0d1117; color: #e6edf3; border-color: #21262d; }
+    body.theme-tech .style-card { background: #0d1117; color: #7d8590; border-color: #21262d; }
+    body.theme-tech .style-card.active { border-color: #58a6ff; color: #58a6ff; background: rgba(88,166,255,0.06); }
+    body.theme-tech .builder-footer { border-color: #21262d; }
+    body.theme-tech .builder-header { border-color: #21262d; }
+    body.theme-tech .d-subheader { background: #161b22; border-color: #21262d; }
+    body.theme-tech .d-breadcrumb strong { color: #e6edf3; }
+
+    /* Энергия (dark + orange) */
+    body.theme-energy {
+      --bg: #111111;
+      --panel-bg: #1a1a1a;
+      --panel-border: #2a2a2a;
+      --text: #f5f5f5;
+      --muted: #888888;
+      --accent: #f97316;
+    }
+    body.theme-energy .d-nav { background: #0a0a0a; }
+    body.theme-energy { --d-bg: #111111; --d-header: #1a1a1a; --d-header-border: #2a2a2a; --d-card: #1a1a1a; --d-card-border: #2a2a2a; --d-text: #f5f5f5; --d-muted: #888888; --d-accent: #f97316; --d-nav-bg: #0a0a0a; }
+    body.theme-energy .d-table tr:hover td { background: #222222; }
+    body.theme-energy .d-table td { border-bottom-color: #2a2a2a; }
+    body.theme-energy .d-badge.green { background: #14291a; color: #4ade80; }
+    body.theme-energy .d-badge.blue { background: #0f2040; color: #60a5fa; }
+    body.theme-energy .d-badge.yellow { background: #2a1f00; color: #fbbf24; }
+    body.theme-energy .d-badge.gray { background: #222; color: #888; }
+    body.theme-energy .builder-panel { background: #1a1a1a; border-color: #2a2a2a; }
+    body.theme-energy .section-label { color: #888; }
+    body.theme-energy .toggle-row { border-color: #2a2a2a; }
+    body.theme-energy .toggle-name { color: #f5f5f5; }
+    body.theme-energy .sphere-select { background: #111; color: #f5f5f5; border-color: #2a2a2a; }
+    body.theme-energy .style-card { background: #111; color: #888; border-color: #2a2a2a; }
+    body.theme-energy .style-card.active { border-color: #f97316; color: #f97316; background: rgba(249,115,22,0.08); }
+    body.theme-energy .builder-footer { border-color: #2a2a2a; }
+    body.theme-energy .builder-header { border-color: #2a2a2a; }
+    body.theme-energy .d-subheader { background: #1a1a1a; border-color: #2a2a2a; }
+    body.theme-energy .d-breadcrumb strong { color: #f5f5f5; }
+    body.theme-energy .d-kpi { --d-card: #1a1a1a; }
+
+    /* ===== SEPARATOR ===== */
+    .section-sep { height: 1px; background: var(--panel-border); margin: 4px 0; }
   </style>
 </head>
-<body>
+<body class="theme-minimal">
 
-<div class="wrapper">
-  <!-- CONTROL PANEL -->
-  <div class="control-panel">
-    <div class="panel-title">🎨 Цвет</div>
-    <div class="control-group" id="color-controls"></div>
-
-    <div class="panel-title">🔘 Кнопки</div>
-    <div class="select-group" id="button-controls"></div>
-
-    <div class="panel-title">✏️ Шрифт</div>
-    <div class="select-group" id="font-controls"></div>
-
-    <div class="panel-title">📐 Углы</div>
-    <div class="select-group" id="radius-controls"></div>
-
-    <div class="panel-title">✨ Анимация</div>
-    <div class="select-group" id="anim-controls"></div>
+<!-- LEFT BUILDER PANEL -->
+<div class="builder-panel">
+  <div class="builder-header">
+    <div class="builder-logo">Demo Builder</div>
+    <div class="builder-subtitle">Панель разработчика</div>
   </div>
 
-  <!-- DEMO PANEL -->
-  <div class="demo-panel">
-    <div class="account-ui">
-      <div class="account-header">
-        <div class="account-header-title">Мой аккаунт</div>
-        <button class="account-header-btn">Выход</button>
+  <!-- СТИЛЬ -->
+  <div class="builder-section">
+    <div class="section-label">Стиль</div>
+    <div class="style-cards">
+      <div class="style-card active" onclick="setTheme('minimal', this)">
+        <div class="style-dot" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)"></div>
+        Минимал
       </div>
-      <div class="account-content">
-        <div class="account-card">
-          <div class="account-card-title">Профиль</div>
-          <div class="account-item">
-            <span class="account-label">Имя</span>
-            <span class="account-value">Иван Петров</span>
-          </div>
-          <div class="account-item">
-            <span class="account-label">Email</span>
-            <span class="account-value">ivan@example.com</span>
-          </div>
-          <div class="account-item">
-            <span class="account-label">Статус</span>
-            <span class="account-value">Активный</span>
-          </div>
-          <div class="account-item">
-            <span class="account-label">Присоединился</span>
-            <span class="account-value">15 июня 2026</span>
-          </div>
-        </div>
-
-        <div class="account-card">
-          <div class="account-card-title">Настройки</div>
-          <div class="account-form">
-            <div class="form-group">
-              <label class="form-label">Тема</label>
-              <select class="form-input">
-                <option>Тёмная</option>
-                <option>Светлая</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Язык</label>
-              <select class="form-input">
-                <option>Русский</option>
-                <option>English</option>
-              </select>
-            </div>
-            <button class="form-btn">Сохранить</button>
-          </div>
-        </div>
-
-        <div class="account-card">
-          <div class="account-card-title">Активность</div>
-          <div class="account-item">
-            <span class="account-label">Последний вход</span>
-            <span class="account-value">2 часа назад</span>
-          </div>
-          <div class="account-item">
-            <span class="account-label">IP адрес</span>
-            <span class="account-value">192.168.1.1</span>
-          </div>
-          <div class="account-item">
-            <span class="account-label">Браузер</span>
-            <span class="account-value">Chrome</span>
-          </div>
-          <div class="account-item">
-            <span class="account-label">ОС</span>
-            <span class="account-value">macOS</span>
-          </div>
-        </div>
-
-        <div class="account-card">
-          <div class="account-card-title">Подписка</div>
-          <div class="account-item">
-            <span class="account-label">Тариф</span>
-            <span class="account-value">Pro</span>
-          </div>
-          <div class="account-item">
-            <span class="account-label">Оплачено до</span>
-            <span class="account-value">15 сентября 2026</span>
-          </div>
-          <div class="account-item">
-            <span class="account-label">Автопродление</span>
-            <span class="account-value">Включено</span>
-          </div>
-          <div class="account-form" style="margin-top: 12px;">
-            <button class="form-btn">Обновить тариф</button>
-          </div>
-        </div>
+      <div class="style-card" onclick="setTheme('tech', this)">
+        <div class="style-dot" style="background:linear-gradient(135deg,#0d1117,#58a6ff)"></div>
+        Tech
+      </div>
+      <div class="style-card" onclick="setTheme('energy', this)">
+        <div class="style-dot" style="background:linear-gradient(135deg,#111,#f97316)"></div>
+        Энергия
       </div>
     </div>
   </div>
+
+  <div class="section-sep"></div>
+
+  <!-- СФЕРА -->
+  <div class="builder-section">
+    <div class="section-label">Сфера</div>
+    <select class="sphere-select" onchange="setSphere(this.value)">
+      <option value="logistics">Логистика / Доставка</option>
+      <option value="crm">CRM / Клиенты</option>
+      <option value="warehouse">Склад / Производство</option>
+      <option value="finance">Финансы / Учёт</option>
+    </select>
+  </div>
+
+  <div class="section-sep"></div>
+
+  <!-- РАЗДЕЛЫ -->
+  <div class="builder-section">
+    <div class="section-label">Разделы</div>
+    <div class="toggle-list" id="sections-list"></div>
+  </div>
+
+  <div class="section-sep"></div>
+
+  <!-- ФУНКЦИИ -->
+  <div class="builder-section">
+    <div class="section-label">Функции</div>
+    <div class="toggle-list" id="features-list"></div>
+  </div>
+
+  <div class="builder-footer">
+    <button class="open-btn" onclick="openForClient()">
+      ↗ Открыть для клиента
+    </button>
+  </div>
 </div>
 
-<!-- PRESET BAR -->
-<div class="preset-bar">
-  <div class="preset-chips" id="preset-chips"><span style="color:#444;font-size:12px">Пресет пуст</span></div>
-  <button class="save-btn" onclick="savePreset()">💾 Сохранить пресет</button>
-</div>
+<!-- RIGHT DEMO WINDOW -->
+<div class="demo-area">
+  <div class="demo-window" id="demo-window">
 
-<div class="toast" id="toast"></div>
+    <!-- Top nav -->
+    <div class="d-nav" id="d-nav">
+      <div class="d-nav-logo" id="d-app-name">TransExpress</div>
+      <div class="d-nav-items" id="d-nav-items"></div>
+      <div class="d-nav-right">
+        <div class="d-nav-search" id="d-search-box" style="display:none">🔍 Поиск...</div>
+        <div class="d-nav-notif" id="d-notif-icon" style="display:none">🔔<div class="d-nav-notif-badge"></div></div>
+        <div class="d-nav-avatar" id="d-avatar">АК</div>
+      </div>
+    </div>
+
+    <!-- Sub-header -->
+    <div class="d-subheader">
+      <div class="d-breadcrumb">Главная / <strong id="d-breadcrumb-page">Дашборд</strong></div>
+      <button class="d-subheader-btn" id="d-action-btn">+ Новая доставка</button>
+    </div>
+
+    <!-- Main content -->
+    <div class="d-content" id="d-content"></div>
+
+  </div>
+</div>
 
 <script>
-const COLORS = [
-  { name: 'Фиолетовый', hex: '#6c63ff' },
-  { name: 'Синий', hex: '#3b82f6' },
-  { name: 'Голубой', hex: '#06b6d4' },
-  { name: 'Зелёный', hex: '#22c55e' },
-  { name: 'Оранжевый', hex: '#f97316' },
-  { name: 'Розовый', hex: '#ec4899' },
-  { name: 'Красный', hex: '#ef4444' },
-  { name: 'Жёлтый', hex: '#eab308' },
-  { name: 'Серо-синий', hex: '#64748b' },
-  { name: 'Мятный', hex: '#10b981' },
-  { name: 'Индиго', hex: '#4f46e5' },
-  { name: 'Лиловый', hex: '#a855f7' },
-];
-
-const BUTTONS = [
-  { name: 'Округлый, заливка', border: '100px' },
-  { name: 'Мягкий, заливка', border: '10px' },
-  { name: 'Квадратный, заливка', border: '4px' },
-];
-
-const FONTS = [
-  { name: 'Inter', family: 'Inter, sans-serif' },
-  { name: 'Georgia', family: 'Georgia, serif' },
-  { name: 'Trebuchet', family: 'Trebuchet MS, sans-serif' },
-  { name: 'Palatino', family: 'Palatino, serif' },
-];
-
-const RADIUS = [
-  { name: 'Острые', px: '0px' },
-  { name: 'Мягкие', px: '8px' },
-  { name: 'Округлые', px: '12px' },
-  { name: 'Очень округлые', px: '20px' },
-];
-
-const ANIMS = [
-  { name: 'Нет', anim: 'none' },
-  { name: 'Пульсация', anim: 'pulse' },
-  { name: 'Прыжок', anim: 'bounce' },
-  { name: 'Слайд', anim: 'slide' },
-];
-
-let preset = {};
-
-function applyColor(hex, name) {
-  document.documentElement.style.setProperty('--accent', hex);
-  preset.color = name;
-  updatePresetBar();
-  updateColorButtons();
-}
-
-function applyButton(border, name) {
-  document.documentElement.style.setProperty('--btn-radius', border);
-  preset.button = name;
-  updatePresetBar();
-  updateButtonButtons();
-}
-
-function applyFont(family, name) {
-  document.documentElement.style.setProperty('--font-family', family);
-  document.documentElement.style.setProperty('--title-font-family', family);
-  preset.font = name;
-  updatePresetBar();
-  updateFontButtons();
-}
-
-function applyRadius(px, name) {
-  document.documentElement.style.setProperty('--border-radius', px);
-  preset.radius = name;
-  updatePresetBar();
-  updateRadiusButtons();
-}
-
-function applyAnim(anim, name) {
-  preset.animation = name;
-  updatePresetBar();
-  updateAnimButtons();
-}
-
-function updateColorButtons() {
-  document.querySelectorAll('[data-color-btn]').forEach(btn => {
-    btn.classList.toggle('selected', btn.dataset.colorName === preset.color);
-  });
-}
-
-function updateButtonButtons() {
-  document.querySelectorAll('[data-button-btn]').forEach(btn => {
-    btn.classList.toggle('selected', btn.dataset.buttonName === preset.button);
-  });
-}
-
-function updateFontButtons() {
-  document.querySelectorAll('[data-font-btn]').forEach(btn => {
-    btn.classList.toggle('selected', btn.dataset.fontName === preset.font);
-  });
-}
-
-function updateRadiusButtons() {
-  document.querySelectorAll('[data-radius-btn]').forEach(btn => {
-    btn.classList.toggle('selected', btn.dataset.radiusName === preset.radius);
-  });
-}
-
-function updateAnimButtons() {
-  document.querySelectorAll('[data-anim-btn]').forEach(btn => {
-    btn.classList.toggle('selected', btn.dataset.animName === preset.animation);
-  });
-}
-
-// Build color controls
-const cc = document.getElementById('color-controls');
-COLORS.forEach(c => {
-  const btn = document.createElement('button');
-  btn.className = 'color-btn';
-  btn.style.backgroundColor = c.hex;
-  btn.textContent = c.name;
-  btn.dataset.colorBtn = '1';
-  btn.dataset.colorName = c.name;
-  btn.onclick = () => applyColor(c.hex, c.name);
-  cc.appendChild(btn);
-});
-
-// Build button controls
-const bc = document.getElementById('button-controls');
-BUTTONS.forEach(b => {
-  const item = document.createElement('div');
-  item.className = 'select-item';
-  item.textContent = b.name;
-  item.dataset.buttonBtn = '1';
-  item.dataset.buttonName = b.name;
-  item.onclick = () => applyButton(b.border, b.name);
-  bc.appendChild(item);
-});
-
-// Build font controls
-const fc = document.getElementById('font-controls');
-FONTS.forEach(f => {
-  const item = document.createElement('div');
-  item.className = 'select-item';
-  item.textContent = f.name;
-  item.style.fontFamily = f.family;
-  item.dataset.fontBtn = '1';
-  item.dataset.fontName = f.name;
-  item.onclick = () => applyFont(f.family, f.name);
-  fc.appendChild(item);
-});
-
-// Build radius controls
-const rc = document.getElementById('radius-controls');
-RADIUS.forEach(r => {
-  const item = document.createElement('div');
-  item.className = 'select-item';
-  item.textContent = r.name;
-  item.dataset.radiusBtn = '1';
-  item.dataset.radiusName = r.name;
-  item.onclick = () => applyRadius(r.px, r.name);
-  rc.appendChild(item);
-});
-
-// Build animation controls
-const ac = document.getElementById('anim-controls');
-ANIMS.forEach(a => {
-  const item = document.createElement('div');
-  item.className = 'select-item';
-  item.textContent = a.name;
-  item.dataset.animBtn = '1';
-  item.dataset.animName = a.name;
-  item.onclick = () => applyAnim(a.anim, a.name);
-  ac.appendChild(item);
-});
-
-function updatePresetBar() {
-  const chips = document.getElementById('preset-chips');
-  const entries = Object.entries(preset).filter(([,v]) => v);
-  if (entries.length === 0) {
-    chips.innerHTML = '<span style="color:#444;font-size:12px">Пресет пуст</span>';
-    return;
+// ===== DATA =====
+const SPHERES = {
+  logistics: {
+    appName: 'TransExpress',
+    avatar: 'АК',
+    actionBtn: '+ Новая доставка',
+    breadcrumb: 'Дашборд',
+    sections: [
+      { id: 'dashboard', name: 'Дашборд', icon: '📊', on: true },
+      { id: 'orders', name: 'Заказы', icon: '📦', badge: 8, on: true },
+      { id: 'deliveries', name: 'Доставки', icon: '🚚', badge: 12, on: true },
+      { id: 'drivers', name: 'Водители', icon: '👤', on: true },
+      { id: 'map', name: 'Карта', icon: '🗺️', on: true },
+      { id: 'warehouse', name: 'Склад', icon: '🏭', on: false },
+      { id: 'clients', name: 'Клиенты', icon: '🤝', on: true },
+      { id: 'analytics', name: 'Аналитика', icon: '📈', on: true },
+      { id: 'settings', name: 'Настройки', icon: '⚙️', on: true },
+    ],
+    features: [
+      { id: 'notif', name: 'Уведомления', desc: 'Push, SMS, Telegram', icon: '🔔', on: true },
+      { id: 'gps', name: 'GPS-трекинг', desc: 'Отслеживание', icon: '📍', on: true },
+      { id: 'routes', name: 'Оптим. маршрутов', desc: 'Алгоритмизация', icon: '🗺️', on: true },
+      { id: 'export', name: 'Экспорт отчётов', desc: 'Excel, PDF', icon: '📤', on: true },
+    ],
+    renderContent() {
+      return `
+        <div class="d-page-title">Дашборд</div>
+        <div class="d-page-sub">Обзор за сегодня, 15 июня 2026</div>
+        <div class="d-kpi-row">
+          <div class="d-kpi"><div class="d-kpi-icon">📦</div><div class="d-kpi-label">Доставок сегодня</div><div class="d-kpi-value">47</div><div class="d-kpi-delta up">↑ +12% к вчера</div></div>
+          <div class="d-kpi"><div class="d-kpi-icon">🚚</div><div class="d-kpi-label">В пути</div><div class="d-kpi-value">12</div><div class="d-kpi-delta down">↓ −3 к вчера</div></div>
+          <div class="d-kpi"><div class="d-kpi-icon">👤</div><div class="d-kpi-label">Активных водителей</div><div class="d-kpi-value">8</div><div class="d-kpi-delta neutral">из 10 всего</div></div>
+        </div>
+        <div class="d-two-col">
+          <div class="d-col-main">
+            <div class="d-card">
+              <div class="d-card-header">Последние доставки</div>
+              <table class="d-table">
+                <thead><tr><th>ID</th><th>Клиент</th><th>Адрес</th><th>Водитель</th><th>Статус</th></tr></thead>
+                <tbody>
+                  <tr><td>#TX-2847</td><td>ООО "Технопарк"</td><td>ул. Навои, 42</td><td>Азиз Р.</td><td><span class="d-badge blue">В пути</span></td></tr>
+                  <tr><td>#TX-2846</td><td>Сандоф Алишер</td><td>Чиланзар, 9 кв</td><td>Бахром К.</td><td><span class="d-badge green">Доставлен</span></td></tr>
+                  <tr><td>#TX-2845</td><td>MegaStore</td><td>ТЦ Мега, зона С</td><td>—</td><td><span class="d-badge yellow">Ожидает</span></td></tr>
+                  <tr><td>#TX-2844</td><td>ИП Рашидов</td><td>Юнусабад, 7</td><td>Тимур А.</td><td><span class="d-badge green">Доставлен</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="d-col-side">
+            <div class="d-card">
+              <div class="d-card-header">Активность</div>
+              <div class="d-activity-list">
+                <div class="d-activity-item"><div class="d-activity-dot green">✓</div><div class="d-activity-body"><div class="d-activity-title">#TX-2846 доставлен</div><div class="d-activity-sub">5 мин назад</div></div></div>
+                <div class="d-activity-item"><div class="d-activity-dot blue">📍</div><div class="d-activity-body"><div class="d-activity-title">Азиз Р. выехал на маршрут</div><div class="d-activity-sub">12 мин назад</div></div></div>
+                <div class="d-activity-item"><div class="d-activity-dot yellow">⏳</div><div class="d-activity-body"><div class="d-activity-title">#TX-2845 ожидает</div><div class="d-activity-sub">24 мин назад</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }
+  },
+  crm: {
+    appName: 'ClaroCRM',
+    avatar: 'НА',
+    actionBtn: '+ Новая сделка',
+    breadcrumb: 'Дашборд',
+    sections: [
+      { id: 'dashboard', name: 'Дашборд', icon: '📊', on: true },
+      { id: 'clients', name: 'Клиенты', icon: '🤝', on: true },
+      { id: 'deals', name: 'Сделки', icon: '💼', badge: 5, on: true },
+      { id: 'tasks', name: 'Задачи', icon: '✅', badge: 3, on: true },
+      { id: 'calendar', name: 'Календарь', icon: '📅', on: true },
+      { id: 'reports', name: 'Отчёты', icon: '📈', on: true },
+      { id: 'settings', name: 'Настройки', icon: '⚙️', on: true },
+    ],
+    features: [
+      { id: 'notif', name: 'Уведомления', desc: 'Email, Telegram', icon: '🔔', on: true },
+      { id: 'pipeline', name: 'Воронка продаж', desc: 'Kanban', icon: '🔀', on: true },
+      { id: 'analytics', name: 'Аналитика', desc: 'Дашборды', icon: '📊', on: true },
+      { id: 'export', name: 'Экспорт', desc: 'Excel, PDF', icon: '📤', on: false },
+    ],
+    renderContent() {
+      return `
+        <div class="d-page-title">Дашборд</div>
+        <div class="d-page-sub">CRM — обзор за 15 июня 2026</div>
+        <div class="d-kpi-row">
+          <div class="d-kpi"><div class="d-kpi-icon">🤝</div><div class="d-kpi-label">Клиентов</div><div class="d-kpi-value">124</div><div class="d-kpi-delta up">↑ +8 за месяц</div></div>
+          <div class="d-kpi"><div class="d-kpi-icon">💼</div><div class="d-kpi-label">Сделок в работе</div><div class="d-kpi-value">31</div><div class="d-kpi-delta neutral">на сумму 48 млн сум</div></div>
+          <div class="d-kpi"><div class="d-kpi-icon">✅</div><div class="d-kpi-label">Закрыто сделок</div><div class="d-kpi-value">9</div><div class="d-kpi-delta up">↑ +3 к прошлой неделе</div></div>
+        </div>
+        <div class="d-two-col">
+          <div class="d-col-main">
+            <div class="d-card">
+              <div class="d-card-header">Активные сделки</div>
+              <table class="d-table">
+                <thead><tr><th>Клиент</th><th>Сумма</th><th>Стадия</th><th>Менеджер</th><th>Статус</th></tr></thead>
+                <tbody>
+                  <tr><td>АО "Ташкентэнерго"</td><td>18 500 000 сум</td><td>Переговоры</td><td>Нодира А.</td><td><span class="d-badge blue">Активна</span></td></tr>
+                  <tr><td>ООО "Строймаш"</td><td>7 200 000 сум</td><td>КП отправлено</td><td>Бахром К.</td><td><span class="d-badge yellow">Ожидание</span></td></tr>
+                  <tr><td>ИП Рашидова З.</td><td>3 000 000 сум</td><td>Подписание</td><td>Азиз Р.</td><td><span class="d-badge green">Закрывается</span></td></tr>
+                  <tr><td>MegaTrade</td><td>22 000 000 сум</td><td>Знакомство</td><td>Тимур А.</td><td><span class="d-badge gray">Новая</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="d-col-side">
+            <div class="d-card">
+              <div class="d-card-header">Задачи на сегодня</div>
+              <div class="d-activity-list">
+                <div class="d-activity-item"><div class="d-activity-dot blue">📞</div><div class="d-activity-body"><div class="d-activity-title">Звонок Ташкентэнерго</div><div class="d-activity-sub">14:00 • Нодира А.</div></div></div>
+                <div class="d-activity-item"><div class="d-activity-dot yellow">📄</div><div class="d-activity-body"><div class="d-activity-title">КП для Строймаш</div><div class="d-activity-sub">До 17:00 • Бахром К.</div></div></div>
+                <div class="d-activity-item"><div class="d-activity-dot green">✓</div><div class="d-activity-body"><div class="d-activity-title">Договор Рашидова — готов</div><div class="d-activity-sub">Выполнено</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }
+  },
+  warehouse: {
+    appName: 'SkladPro',
+    avatar: 'ШМ',
+    actionBtn: '+ Приход товара',
+    breadcrumb: 'Дашборд',
+    sections: [
+      { id: 'dashboard', name: 'Дашборд', icon: '📊', on: true },
+      { id: 'stock', name: 'Остатки', icon: '📦', on: true },
+      { id: 'income', name: 'Приход', icon: '⬇️', badge: 2, on: true },
+      { id: 'movement', name: 'Движение', icon: '🔀', on: true },
+      { id: 'writeoff', name: 'Списание', icon: '🗑️', on: true },
+      { id: 'orders', name: 'Заказы', icon: '📋', on: true },
+      { id: 'reports', name: 'Отчёты', icon: '📈', on: true },
+      { id: 'settings', name: 'Настройки', icon: '⚙️', on: true },
+    ],
+    features: [
+      { id: 'barcode', name: 'Штрихкоды', desc: 'Сканирование', icon: '📷', on: true },
+      { id: 'reserve', name: 'Резервирование', desc: 'Под заказы', icon: '🔒', on: true },
+      { id: 'alerts', name: 'Алерты остатков', desc: 'Мин. порог', icon: '⚠️', on: true },
+      { id: 'export', name: 'Экспорт', desc: 'Excel, PDF', icon: '📤', on: true },
+    ],
+    renderContent() {
+      return `
+        <div class="d-page-title">Дашборд</div>
+        <div class="d-page-sub">Складской учёт — 15 июня 2026</div>
+        <div class="d-kpi-row">
+          <div class="d-kpi"><div class="d-kpi-icon">📦</div><div class="d-kpi-label">Позиций на складе</div><div class="d-kpi-value">312</div><div class="d-kpi-delta neutral">3 склада</div></div>
+          <div class="d-kpi"><div class="d-kpi-icon">⬇️</div><div class="d-kpi-label">Приход сегодня</div><div class="d-kpi-value">18</div><div class="d-kpi-delta up">↑ +5 позиций</div></div>
+          <div class="d-kpi"><div class="d-kpi-icon">⚠️</div><div class="d-kpi-label">Критический запас</div><div class="d-kpi-value">4</div><div class="d-kpi-delta down">Нужен заказ</div></div>
+        </div>
+        <div class="d-two-col">
+          <div class="d-col-main">
+            <div class="d-card">
+              <div class="d-card-header">Остатки (топ позиции)</div>
+              <table class="d-table">
+                <thead><tr><th>Материал</th><th>Склад</th><th>Остаток</th><th>Ед.</th><th>Статус</th></tr></thead>
+                <tbody>
+                  <tr><td>Арматура Ø12</td><td>Главный</td><td>4 200</td><td>кг</td><td><span class="d-badge green">В норме</span></td></tr>
+                  <tr><td>Уголок 50×50</td><td>Главный</td><td>850</td><td>кг</td><td><span class="d-badge green">В норме</span></td></tr>
+                  <tr><td>Лист 4мм</td><td>Цех №1</td><td>120</td><td>кг</td><td><span class="d-badge yellow">Мало</span></td></tr>
+                  <tr><td>Электроды Э42</td><td>Цех №1</td><td>18</td><td>уп.</td><td><span class="d-badge red">Критично</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="d-col-side">
+            <div class="d-card">
+              <div class="d-card-header">Последние операции</div>
+              <div class="d-activity-list">
+                <div class="d-activity-item"><div class="d-activity-dot green">⬇️</div><div class="d-activity-body"><div class="d-activity-title">Приход: Арматура Ø12</div><div class="d-activity-sub">2 000 кг • 1 час назад</div></div></div>
+                <div class="d-activity-item"><div class="d-activity-dot blue">🔀</div><div class="d-activity-body"><div class="d-activity-title">Передача в Цех №1</div><div class="d-activity-sub">Лист 4мм, 50 кг</div></div></div>
+                <div class="d-activity-item"><div class="d-activity-dot yellow">⚠️</div><div class="d-activity-body"><div class="d-activity-title">Мин. запас: Электроды</div><div class="d-activity-sub">Остаток 18 уп.</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }
+  },
+  finance: {
+    appName: 'FinControl',
+    avatar: 'НХ',
+    actionBtn: '+ Новая операция',
+    breadcrumb: 'Дашборд',
+    sections: [
+      { id: 'dashboard', name: 'Дашборд', icon: '📊', on: true },
+      { id: 'income', name: 'Доходы', icon: '💰', on: true },
+      { id: 'expense', name: 'Расходы', icon: '📉', on: true },
+      { id: 'cashflow', name: 'Движение', icon: '🔀', badge: 3, on: true },
+      { id: 'accounts', name: 'Счета', icon: '🏦', on: true },
+      { id: 'reports', name: 'Отчёты', icon: '📈', on: true },
+      { id: 'settings', name: 'Настройки', icon: '⚙️', on: true },
+    ],
+    features: [
+      { id: 'budget', name: 'Бюджетирование', desc: 'По статьям', icon: '📋', on: true },
+      { id: 'alerts', name: 'Алерты', desc: 'Превышение лимитов', icon: '⚠️', on: true },
+      { id: 'multicurrency', name: 'Мультивалюта', desc: 'UZS, USD', icon: '💱', on: true },
+      { id: 'export', name: 'Экспорт', desc: 'Excel, PDF', icon: '📤', on: true },
+    ],
+    renderContent() {
+      return `
+        <div class="d-page-title">Дашборд</div>
+        <div class="d-page-sub">Финансовый учёт — июнь 2026</div>
+        <div class="d-kpi-row">
+          <div class="d-kpi"><div class="d-kpi-icon">💰</div><div class="d-kpi-label">Доходы (июнь)</div><div class="d-kpi-value">124М</div><div class="d-kpi-delta up">↑ +18% к маю</div></div>
+          <div class="d-kpi"><div class="d-kpi-icon">📉</div><div class="d-kpi-label">Расходы (июнь)</div><div class="d-kpi-value">89М</div><div class="d-kpi-delta neutral">−5% к плану</div></div>
+          <div class="d-kpi"><div class="d-kpi-icon">📊</div><div class="d-kpi-label">Прибыль</div><div class="d-kpi-value">35М</div><div class="d-kpi-delta up">↑ Маржа 28%</div></div>
+        </div>
+        <div class="d-two-col">
+          <div class="d-col-main">
+            <div class="d-card">
+              <div class="d-card-header">Последние операции</div>
+              <table class="d-table">
+                <thead><tr><th>Дата</th><th>Описание</th><th>Сумма</th><th>Счёт</th><th>Тип</th></tr></thead>
+                <tbody>
+                  <tr><td>15.06</td><td>Оплата от АО "Ташкентэнерго"</td><td>+18 500 000 сум</td><td>Основной</td><td><span class="d-badge green">Доход</span></td></tr>
+                  <tr><td>14.06</td><td>Закупка материалов</td><td>−6 200 000 сум</td><td>Основной</td><td><span class="d-badge red">Расход</span></td></tr>
+                  <tr><td>14.06</td><td>ЗП сотрудникам</td><td>−22 000 000 сум</td><td>Зарплатный</td><td><span class="d-badge red">Расход</span></td></tr>
+                  <tr><td>13.06</td><td>Оплата от MegaTrade</td><td>+9 000 000 сум</td><td>Основной</td><td><span class="d-badge green">Доход</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="d-col-side">
+            <div class="d-card">
+              <div class="d-card-header">Счета</div>
+              <div class="d-activity-list">
+                <div class="d-activity-item"><div class="d-activity-dot green">🏦</div><div class="d-activity-body"><div class="d-activity-title">Основной счёт</div><div class="d-activity-sub">87 340 000 сум</div></div></div>
+                <div class="d-activity-item"><div class="d-activity-dot blue">💰</div><div class="d-activity-body"><div class="d-activity-title">Зарплатный</div><div class="d-activity-sub">12 000 000 сум</div></div></div>
+                <div class="d-activity-item"><div class="d-activity-dot yellow">💱</div><div class="d-activity-body"><div class="d-activity-title">USD-счёт</div><div class="d-activity-sub">$4 200</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }
   }
-  chips.innerHTML = entries.map(([cat, v]) =>
-    `<span class="chip">${getCatName(cat)}: ${v}</span>`
-  ).join('');
+};
+
+let currentSphere = 'logistics';
+let currentTheme = 'minimal';
+
+// ===== THEME =====
+function setTheme(theme, el) {
+  currentTheme = theme;
+  document.body.className = 'theme-' + theme;
+  document.querySelectorAll('.style-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
 }
 
-function getCatName(cat) {
-  return { color: '🎨', button: '🔘', font: '✏️', radius: '📐', animation: '✨' }[cat] || cat;
+// ===== SPHERE =====
+function setSphere(sphereId) {
+  currentSphere = sphereId;
+  renderBuilderPanel();
+  renderDemo();
 }
 
-function getPresetText() {
-  const entries = Object.entries(preset).filter(([,v]) => v);
-  if (entries.length === 0) return 'Пресет пустой';
-  const lines = entries.map(([cat, v]) => `${getCatName(cat)} ${v}`);
-  return '🎨 Пресет:\n' + lines.join('\n');
+// ===== RENDER BUILDER PANEL =====
+function renderBuilderPanel() {
+  const sphere = SPHERES[currentSphere];
+
+  // Sections
+  const secList = document.getElementById('sections-list');
+  secList.innerHTML = sphere.sections.map(s => `
+    <div class="toggle-row">
+      <div class="toggle-info">
+        <span class="toggle-icon">${s.icon}</span>
+        <div>
+          <div class="toggle-name">${s.name}</div>
+        </div>
+      </div>
+      <button class="toggle-switch ${s.on ? 'on' : ''}" onclick="toggleSection('${s.id}', this)"></button>
+    </div>
+  `).join('');
+
+  // Features
+  const featList = document.getElementById('features-list');
+  featList.innerHTML = sphere.features.map(f => `
+    <div class="toggle-row">
+      <div class="toggle-info">
+        <span class="toggle-icon">${f.icon}</span>
+        <div>
+          <div class="toggle-name">${f.name}</div>
+          <div class="toggle-desc">${f.desc}</div>
+        </div>
+      </div>
+      <button class="toggle-switch ${f.on ? 'on' : ''}" onclick="toggleFeature('${f.id}', this)"></button>
+    </div>
+  `).join('');
 }
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+// ===== TOGGLE SECTION =====
+function toggleSection(id, btn) {
+  const sphere = SPHERES[currentSphere];
+  const sec = sphere.sections.find(s => s.id === id);
+  if (sec) {
+    sec.on = !sec.on;
+    btn.classList.toggle('on', sec.on);
+    renderNavItems();
+  }
 }
 
-function savePreset() {
-  const entries = Object.entries(preset).filter(([,v]) => v);
-  if (entries.length === 0) { showToast('Выбери хотя бы один параметр'); return; }
-  const text = getPresetText();
-  const blob = new Blob([text], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'preset.txt'; a.click();
-  showToast('Пресет сохранён! 📎');
+// ===== TOGGLE FEATURE =====
+function toggleFeature(id, btn) {
+  const sphere = SPHERES[currentSphere];
+  const feat = sphere.features.find(f => f.id === id);
+  if (feat) {
+    feat.on = !feat.on;
+    btn.classList.toggle('on', feat.on);
+    applyFeatures();
+  }
 }
 
-// Apply default color
-applyColor('#6c63ff', 'Фиолетовый');
+// ===== RENDER DEMO =====
+function renderDemo() {
+  const sphere = SPHERES[currentSphere];
+  document.getElementById('d-app-name').textContent = sphere.appName;
+  document.getElementById('d-avatar').textContent = sphere.avatar;
+  document.getElementById('d-action-btn').textContent = sphere.actionBtn;
+  document.getElementById('d-breadcrumb-page').textContent = sphere.breadcrumb;
+  renderNavItems();
+  document.getElementById('d-content').innerHTML = sphere.renderContent();
+  applyFeatures();
+}
+
+function renderNavItems() {
+  const sphere = SPHERES[currentSphere];
+  const nav = document.getElementById('d-nav-items');
+  const visible = sphere.sections.filter(s => s.on);
+  nav.innerHTML = visible.map((s, i) => `
+    <div class="d-nav-item ${i === 0 ? 'active' : ''}" onclick="setActiveNav(this)">
+      ${s.name}
+      ${s.badge ? `<span class="d-nav-badge">${s.badge}</span>` : ''}
+    </div>
+  `).join('');
+}
+
+function setActiveNav(el) {
+  document.querySelectorAll('.d-nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function applyFeatures() {
+  const sphere = SPHERES[currentSphere];
+  const notif = sphere.features.find(f => f.id === 'notif');
+  const notifIcon = document.getElementById('d-notif-icon');
+  const searchBox = document.getElementById('d-search-box');
+  if (notifIcon) notifIcon.style.display = (notif && notif.on) ? 'flex' : 'none';
+  if (searchBox) searchBox.style.display = 'block';
+}
+
+// ===== OPEN FOR CLIENT =====
+function openForClient() {
+  const sphere = SPHERES[currentSphere];
+  const html = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>${sphere.appName}</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f8fafc;color:#1e293b}
+.nav{background:#1e293b;display:flex;align-items:center;padding:0 20px;height:48px;gap:4px}
+.nav-logo{font-size:14px;font-weight:700;color:white;margin-right:16px}
+.nav-item{padding:6px 12px;border-radius:6px;font-size:12px;color:#94a3b8;cursor:pointer}
+.nav-item.active{background:rgba(99,102,241,0.2);color:#818cf8}
+.content{padding:28px 32px}
+.page-title{font-size:22px;font-weight:700;margin-bottom:4px}
+.page-sub{font-size:12px;color:#64748b;margin-bottom:20px}
+</style>
+</head>
+<body>
+<div class="nav">
+  <div class="nav-logo">${sphere.appName}</div>
+  ${sphere.sections.filter(s=>s.on).map((s,i)=>`<div class="nav-item ${i===0?'active':''}">${s.name}</div>`).join('')}
+</div>
+<div class="content">
+  <div class="page-title">Добро пожаловать в ${sphere.appName}</div>
+  <div class="page-sub">Демонстрационная версия интерфейса</div>
+  <p style="color:#64748b;font-size:14px">Здесь будет полноценный интерфейс приложения.</p>
+</div>
+</body>
+</html>`;
+  const blob = new Blob([html], {type:'text/html'});
+  window.open(URL.createObjectURL(blob), '_blank');
+}
+
+// ===== INIT =====
+renderBuilderPanel();
+renderDemo();
 </script>
 
 </body>
