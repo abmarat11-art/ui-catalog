@@ -14,186 +14,195 @@
       --text: #e8e8f0;
       --muted: #888899;
       --accent: #6c63ff;
+      --btn-radius: 100px;
+      --border-radius: 8px;
+      --font-family: 'Segoe UI', system-ui, sans-serif;
+      --title-font-family: 'Segoe UI', system-ui, sans-serif;
     }
 
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-family: var(--font-family);
       min-height: 100vh;
     }
 
-    /* ===== HEADER ===== */
-    header {
-      padding: 24px 40px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    select {
+      background-color: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius);
+      font-family: var(--font-family);
+      font-size: 13px;
+      padding: 8px 10px;
     }
-    header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
-    header span { color: var(--muted); font-size: 14px; }
 
     /* ===== LAYOUT ===== */
-    .container { display: flex; min-height: calc(100vh - 73px); }
+    .wrapper { display: flex; min-height: 100vh; }
 
-    /* ===== SIDEBAR ===== */
-    .sidebar {
-      width: 220px;
+    /* ===== LEFT PANEL (CONTROLS) ===== */
+    .control-panel {
+      width: 320px;
+      background: var(--bg);
       border-right: 1px solid var(--border);
-      padding: 24px 0;
+      padding: 24px 16px;
+      overflow-y: auto;
       flex-shrink: 0;
     }
-    .sidebar-label {
-      padding: 0 20px 8px;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--muted);
+
+    .panel-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-top: 20px; margin-bottom: 12px; font-weight: 700; }
+    .panel-title:first-child { margin-top: 0; }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 4px;
     }
-    .nav-item {
-      padding: 10px 20px;
+
+    .color-btn {
+      height: 44px;
+      border-radius: 8px;
+      border: 2px solid transparent;
       cursor: pointer;
-      font-size: 14px;
-      color: var(--muted);
-      border-left: 3px solid transparent;
       transition: all 0.15s;
+      font-size: 12px;
+      font-weight: 600;
     }
-    .nav-item:hover { color: var(--text); background: var(--surface); }
-    .nav-item.active { color: var(--text); border-left-color: var(--accent); background: var(--surface); }
+    .color-btn:hover { border-color: var(--text); transform: scale(1.02); }
+    .color-btn.selected { border-color: var(--text); box-shadow: 0 0 0 3px rgba(255,255,255,0.1); }
 
-    /* ===== MAIN ===== */
-    .main { flex: 1; padding: 40px; overflow-y: auto; }
-
-    .section { display: none; }
-    .section.active { display: block; }
-
-    .section-title {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 8px;
+    .select-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
-    .section-desc {
-      color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 32px;
-    }
-
-    /* ===== GRID ===== */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-
-    /* ===== CARD ===== */
-    .card {
+    .select-item {
+      padding: 12px 12px;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
+      border-radius: 6px;
       cursor: pointer;
+      font-size: 13px;
       transition: all 0.15s;
-      position: relative;
     }
-    .card:hover { border-color: #44445a; transform: translateY(-1px); }
-    .card.selected { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+    .select-item:hover { border-color: #44445a; }
+    .select-item.selected { background: rgba(108,99,255,0.2); border-color: var(--accent); }
 
-    .card-label {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 12px;
-    }
-    .card-name { font-size: 14px; font-weight: 600; margin-top: 2px; }
-
-    .check {
-      position: absolute;
-      top: 12px; right: 12px;
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      background: var(--accent);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-    }
-    .card.selected .check { display: flex; }
-
-    /* ===== COLORS ===== */
-    .color-swatch {
-      height: 80px;
-      border-radius: 8px;
-    }
-
-    /* ===== BUTTONS ===== */
-    .btn-preview {
+    /* ===== RIGHT PANEL (DEMO) ===== */
+    .demo-panel {
+      flex: 1;
+      background: var(--bg);
+      overflow: auto;
+      padding: 0;
       display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== ACCOUNT DEMO UI ===== */
+    .account-ui {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background: var(--bg);
+    }
+
+    .account-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      height: 56px;
     }
-    .demo-btn {
-      padding: 10px 24px;
-      font-size: 14px;
-      font-weight: 600;
+
+    .account-header-title { font-size: 18px; font-weight: 700; font-family: var(--title-font-family); }
+    .account-header-btn {
+      padding: 8px 16px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: var(--btn-radius);
       cursor: default;
-      letter-spacing: 0.3px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font-family);
     }
-    .demo-btn.style-rounded { border-radius: 100px; }
-    .demo-btn.style-square { border-radius: 4px; }
-    .demo-btn.style-soft { border-radius: 10px; }
 
-    .demo-btn.fill-solid { border: none; color: #fff; background: var(--accent); }
-    .demo-btn.fill-outline { border: 2px solid var(--accent); background: transparent; color: var(--accent); }
-    .demo-btn.fill-ghost { border: none; background: rgba(108,99,255,0.15); color: var(--accent); }
-
-    .demo-btn.effect-shadow { box-shadow: 0 4px 20px rgba(108,99,255,0.5); }
-    .demo-btn.effect-glow { box-shadow: 0 0 16px rgba(108,99,255,0.7); }
-
-    /* ===== FONTS ===== */
-    .font-preview {
-      font-size: 28px;
-      font-weight: 700;
-      padding: 16px 0 8px;
+    .account-content {
+      flex: 1;
+      padding: 32px 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
     }
-    .font-sub { font-size: 14px; color: var(--muted); }
 
-    /* ===== RADIUS ===== */
-    .radius-demo {
-      height: 60px;
+    .account-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius);
+      padding: 20px;
+    }
+
+    .account-card-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; font-family: var(--title-font-family); }
+
+    .account-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .account-item:last-child { border-bottom: none; }
+
+    .account-label { color: var(--muted); }
+    .account-value { font-weight: 600; }
+
+    .account-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label { font-size: 13px; font-weight: 600; }
+    .form-input {
+      padding: 10px 12px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--border-radius);
+      color: var(--text);
+      font-size: 13px;
+      font-family: var(--font-family);
+    }
+    .form-input:focus { outline: none; border-color: var(--accent); }
+
+    .form-btn {
+      padding: 10px 16px;
       background: var(--accent);
-      opacity: 0.7;
+      color: white;
+      border: none;
+      border-radius: var(--btn-radius);
+      cursor: default;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 8px;
+      font-family: var(--font-family);
     }
 
-    /* ===== ANIMATIONS ===== */
-    .anim-box {
-      height: 60px;
-      background: var(--accent);
-      border-radius: 8px;
-      opacity: 0.7;
-    }
-    @keyframes pulse { 0%,100%{opacity:0.7} 50%{opacity:1} }
-    @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-    @keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
-    @keyframes slide { 0%,100%{transform:translateX(0)} 50%{transform:translateX(10px)} }
-    @keyframes scale { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
-
-    .anim-pulse .anim-box { animation: pulse 2s infinite; }
-    .anim-bounce .anim-box { animation: bounce 1.2s infinite; }
-    .anim-spin .anim-box { animation: spin 2s linear infinite; border-radius: 50%; height: 50px; width: 50px; margin: 5px auto; }
-    .anim-slide .anim-box { animation: slide 1.5s ease-in-out infinite; }
-    .anim-scale .anim-box { animation: scale 1.5s ease-in-out infinite; }
-
-    /* ===== PRESET PANEL ===== */
+    /* ===== PRESET BAR ===== */
     .preset-bar {
       position: fixed;
       bottom: 0; left: 0; right: 0;
       background: #13131c;
       border-top: 1px solid var(--border);
-      padding: 16px 40px;
+      padding: 16px 24px;
       display: flex;
       align-items: center;
       gap: 16px;
       z-index: 100;
     }
-    .preset-bar-label { font-size: 13px; color: var(--muted); flex: 1; }
+
     .preset-chips { display: flex; gap: 8px; flex-wrap: wrap; }
     .chip {
       padding: 4px 12px;
@@ -203,6 +212,7 @@
       border: 1px solid var(--border);
       color: var(--text);
     }
+
     .save-btn {
       padding: 10px 24px;
       background: var(--accent);
@@ -213,19 +223,9 @@
       font-weight: 600;
       cursor: pointer;
       transition: opacity 0.15s;
+      margin-left: auto;
     }
     .save-btn:hover { opacity: 0.85; }
-    .copy-btn {
-      padding: 10px 16px;
-      background: transparent;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .copy-btn:hover { color: var(--text); border-color: #44445a; }
 
     /* ===== TOAST ===== */
     .toast {
@@ -240,78 +240,128 @@
       transform: translateY(-8px);
       transition: all 0.2s;
       z-index: 999;
-      max-width: 340px;
-      word-break: break-all;
     }
     .toast.show { opacity: 1; transform: translateY(0); }
 
-    main { padding-bottom: 80px; }
+    .account-content { padding-bottom: 100px; }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>UI Каталог</h1>
-  <span>Выбери стиль → Сохрани пресет → Отдай Диме</span>
-</header>
+<div class="wrapper">
+  <!-- CONTROL PANEL -->
+  <div class="control-panel">
+    <div class="panel-title">🎨 Цвет</div>
+    <div class="control-group" id="color-controls"></div>
 
-<div class="container">
-  <nav class="sidebar">
-    <div class="sidebar-label">Разделы</div>
-    <div class="nav-item active" data-section="colors">🎨 Цвета</div>
-    <div class="nav-item" data-section="buttons">🔘 Кнопки</div>
-    <div class="nav-item" data-section="fonts">✏️ Шрифты</div>
-    <div class="nav-item" data-section="radius">📐 Углы</div>
-    <div class="nav-item" data-section="animations">✨ Анимации</div>
-  </nav>
+    <div class="panel-title">🔘 Кнопки</div>
+    <div class="select-group" id="button-controls"></div>
 
-  <main class="main">
+    <div class="panel-title">✏️ Шрифт</div>
+    <div class="select-group" id="font-controls"></div>
 
-    <!-- COLORS -->
-    <section class="section active" id="colors">
-      <div class="section-title">Цвета</div>
-      <div class="section-desc">Выбери основной цвет для сайта</div>
-      <div class="grid" id="color-grid"></div>
-    </section>
+    <div class="panel-title">📐 Углы</div>
+    <div class="select-group" id="radius-controls"></div>
 
-    <!-- BUTTONS -->
-    <section class="section" id="buttons">
-      <div class="section-title">Кнопки</div>
-      <div class="section-desc">Выбери стиль кнопок</div>
-      <div class="grid-2" id="button-grid"></div>
-    </section>
+    <div class="panel-title">✨ Анимация</div>
+    <div class="select-group" id="anim-controls"></div>
+  </div>
 
-    <!-- FONTS -->
-    <section class="section" id="fonts">
-      <div class="section-title">Шрифты</div>
-      <div class="section-desc">Выбери шрифт для заголовков</div>
-      <div class="grid-2" id="font-grid"></div>
-    </section>
+  <!-- DEMO PANEL -->
+  <div class="demo-panel">
+    <div class="account-ui">
+      <div class="account-header">
+        <div class="account-header-title">Мой аккаунт</div>
+        <button class="account-header-btn">Выход</button>
+      </div>
+      <div class="account-content">
+        <div class="account-card">
+          <div class="account-card-title">Профиль</div>
+          <div class="account-item">
+            <span class="account-label">Имя</span>
+            <span class="account-value">Иван Петров</span>
+          </div>
+          <div class="account-item">
+            <span class="account-label">Email</span>
+            <span class="account-value">ivan@example.com</span>
+          </div>
+          <div class="account-item">
+            <span class="account-label">Статус</span>
+            <span class="account-value">Активный</span>
+          </div>
+          <div class="account-item">
+            <span class="account-label">Присоединился</span>
+            <span class="account-value">15 июня 2026</span>
+          </div>
+        </div>
 
-    <!-- RADIUS -->
-    <section class="section" id="radius">
-      <div class="section-title">Углы</div>
-      <div class="section-desc">Насколько округлые элементы</div>
-      <div class="grid" id="radius-grid"></div>
-    </section>
+        <div class="account-card">
+          <div class="account-card-title">Настройки</div>
+          <div class="account-form">
+            <div class="form-group">
+              <label class="form-label">Тема</label>
+              <select class="form-input">
+                <option>Тёмная</option>
+                <option>Светлая</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Язык</label>
+              <select class="form-input">
+                <option>Русский</option>
+                <option>English</option>
+              </select>
+            </div>
+            <button class="form-btn">Сохранить</button>
+          </div>
+        </div>
 
-    <!-- ANIMATIONS -->
-    <section class="section" id="animations">
-      <div class="section-title">Анимации</div>
-      <div class="section-desc">Выбери эффект движения</div>
-      <div class="grid" id="anim-grid"></div>
-    </section>
+        <div class="account-card">
+          <div class="account-card-title">Активность</div>
+          <div class="account-item">
+            <span class="account-label">Последний вход</span>
+            <span class="account-value">2 часа назад</span>
+          </div>
+          <div class="account-item">
+            <span class="account-label">IP адрес</span>
+            <span class="account-value">192.168.1.1</span>
+          </div>
+          <div class="account-item">
+            <span class="account-label">Браузер</span>
+            <span class="account-value">Chrome</span>
+          </div>
+          <div class="account-item">
+            <span class="account-label">ОС</span>
+            <span class="account-value">macOS</span>
+          </div>
+        </div>
 
-  </main>
+        <div class="account-card">
+          <div class="account-card-title">Подписка</div>
+          <div class="account-item">
+            <span class="account-label">Тариф</span>
+            <span class="account-value">Pro</span>
+          </div>
+          <div class="account-item">
+            <span class="account-label">Оплачено до</span>
+            <span class="account-value">15 сентября 2026</span>
+          </div>
+          <div class="account-item">
+            <span class="account-label">Автопродление</span>
+            <span class="account-value">Включено</span>
+          </div>
+          <div class="account-form" style="margin-top: 12px;">
+            <button class="form-btn">Обновить тариф</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- PRESET BAR -->
 <div class="preset-bar">
-  <div>
-    <div class="preset-bar-label">Твой пресет:</div>
-    <div class="preset-chips" id="preset-chips"><span style="color:#444;font-size:12px">Ничего не выбрано</span></div>
-  </div>
-  <button class="copy-btn" onclick="copyPreset()">Скопировать</button>
+  <div class="preset-chips" id="preset-chips"><span style="color:#444;font-size:12px">Пресет пуст</span></div>
   <button class="save-btn" onclick="savePreset()">💾 Сохранить пресет</button>
 </div>
 
@@ -334,138 +384,170 @@ const COLORS = [
 ];
 
 const BUTTONS = [
-  { name: 'Округлый, заливка', cls: 'style-rounded fill-solid' },
-  { name: 'Округлый, контур', cls: 'style-rounded fill-outline' },
-  { name: 'Округлый, призрак', cls: 'style-rounded fill-ghost' },
-  { name: 'Мягкий, заливка', cls: 'style-soft fill-solid' },
-  { name: 'Мягкий, контур', cls: 'style-soft fill-outline' },
-  { name: 'Квадратный, заливка', cls: 'style-square fill-solid' },
-  { name: 'Мягкий + тень', cls: 'style-soft fill-solid effect-shadow' },
-  { name: 'Округлый + свечение', cls: 'style-rounded fill-solid effect-glow' },
+  { name: 'Округлый, заливка', border: '100px' },
+  { name: 'Мягкий, заливка', border: '10px' },
+  { name: 'Квадратный, заливка', border: '4px' },
 ];
 
 const FONTS = [
-  { name: 'Inter', css: 'Inter, sans-serif' },
-  { name: 'Georgia', css: 'Georgia, serif' },
-  { name: 'Courier New', css: "'Courier New', monospace" },
-  { name: 'Trebuchet', css: 'Trebuchet MS, sans-serif' },
-  { name: 'Palatino', css: 'Palatino, serif' },
-  { name: 'Arial', css: 'Arial, sans-serif' },
+  { name: 'Inter', family: 'Inter, sans-serif' },
+  { name: 'Georgia', family: 'Georgia, serif' },
+  { name: 'Trebuchet', family: 'Trebuchet MS, sans-serif' },
+  { name: 'Palatino', family: 'Palatino, serif' },
 ];
 
 const RADIUS = [
-  { name: 'Острые углы', px: '0px' },
-  { name: 'Чуть округлые', px: '4px' },
+  { name: 'Острые', px: '0px' },
   { name: 'Мягкие', px: '8px' },
   { name: 'Округлые', px: '12px' },
   { name: 'Очень округлые', px: '20px' },
-  { name: 'Капсула', px: '100px' },
 ];
 
 const ANIMS = [
-  { name: 'Пульсация', cls: 'anim-pulse' },
-  { name: 'Прыжок', cls: 'anim-bounce' },
-  { name: 'Вращение', cls: 'anim-spin' },
-  { name: 'Слайд', cls: 'anim-slide' },
-  { name: 'Масштаб', cls: 'anim-scale' },
+  { name: 'Нет', anim: 'none' },
+  { name: 'Пульсация', anim: 'pulse' },
+  { name: 'Прыжок', anim: 'bounce' },
+  { name: 'Слайд', anim: 'slide' },
 ];
 
 let preset = {};
 
-function pick(category, key, label) {
-  preset[category] = { key, label };
+function applyColor(hex, name) {
+  document.documentElement.style.setProperty('--accent', hex);
+  preset.color = name;
   updatePresetBar();
+  updateColorButtons();
 }
 
-function makeCard(id, html, label, name, onSelect) {
-  const d = document.createElement('div');
-  d.className = 'card';
-  d.id = id;
-  d.innerHTML = html + `<div class="card-label">${label}</div><div class="card-name">${name}</div><div class="check">✓</div>`;
-  d.onclick = () => {
-    document.querySelectorAll(`[data-group="${label}"]`).forEach(el => el.classList.remove('selected'));
-    d.classList.add('selected');
-    onSelect();
-  };
-  d.dataset.group = label;
-  return d;
+function applyButton(border, name) {
+  document.documentElement.style.setProperty('--btn-radius', border);
+  preset.button = name;
+  updatePresetBar();
+  updateButtonButtons();
 }
 
-// Build colors
-const cg = document.getElementById('color-grid');
-COLORS.forEach((c, i) => {
-  const card = makeCard('c'+i,
-    `<div class="color-swatch" style="background:${c.hex}"></div>`,
-    'Цвет', c.name,
-    () => pick('color', c.hex, c.name)
-  );
-  cg.appendChild(card);
+function applyFont(family, name) {
+  document.documentElement.style.setProperty('--font-family', family);
+  document.documentElement.style.setProperty('--title-font-family', family);
+  preset.font = name;
+  updatePresetBar();
+  updateFontButtons();
+}
+
+function applyRadius(px, name) {
+  document.documentElement.style.setProperty('--border-radius', px);
+  preset.radius = name;
+  updatePresetBar();
+  updateRadiusButtons();
+}
+
+function applyAnim(anim, name) {
+  preset.animation = name;
+  updatePresetBar();
+  updateAnimButtons();
+}
+
+function updateColorButtons() {
+  document.querySelectorAll('[data-color-btn]').forEach(btn => {
+    btn.classList.toggle('selected', btn.dataset.colorName === preset.color);
+  });
+}
+
+function updateButtonButtons() {
+  document.querySelectorAll('[data-button-btn]').forEach(btn => {
+    btn.classList.toggle('selected', btn.dataset.buttonName === preset.button);
+  });
+}
+
+function updateFontButtons() {
+  document.querySelectorAll('[data-font-btn]').forEach(btn => {
+    btn.classList.toggle('selected', btn.dataset.fontName === preset.font);
+  });
+}
+
+function updateRadiusButtons() {
+  document.querySelectorAll('[data-radius-btn]').forEach(btn => {
+    btn.classList.toggle('selected', btn.dataset.radiusName === preset.radius);
+  });
+}
+
+function updateAnimButtons() {
+  document.querySelectorAll('[data-anim-btn]').forEach(btn => {
+    btn.classList.toggle('selected', btn.dataset.animName === preset.animation);
+  });
+}
+
+// Build color controls
+const cc = document.getElementById('color-controls');
+COLORS.forEach(c => {
+  const btn = document.createElement('button');
+  btn.className = 'color-btn';
+  btn.style.backgroundColor = c.hex;
+  btn.textContent = c.name;
+  btn.dataset.colorBtn = '1';
+  btn.dataset.colorName = c.name;
+  btn.onclick = () => applyColor(c.hex, c.name);
+  cc.appendChild(btn);
 });
 
-// Build buttons
-const bg = document.getElementById('button-grid');
-BUTTONS.forEach((b, i) => {
-  const card = makeCard('b'+i,
-    `<div class="btn-preview"><button class="demo-btn ${b.cls}">Кнопка</button></div>`,
-    'Кнопка', b.name,
-    () => pick('button', b.cls, b.name)
-  );
-  card.dataset.group = 'Кнопка';
-  bg.appendChild(card);
+// Build button controls
+const bc = document.getElementById('button-controls');
+BUTTONS.forEach(b => {
+  const item = document.createElement('div');
+  item.className = 'select-item';
+  item.textContent = b.name;
+  item.dataset.buttonBtn = '1';
+  item.dataset.buttonName = b.name;
+  item.onclick = () => applyButton(b.border, b.name);
+  bc.appendChild(item);
 });
 
-// Build fonts
-const fg = document.getElementById('font-grid');
-FONTS.forEach((f, i) => {
-  const card = makeCard('f'+i,
-    `<div class="font-preview" style="font-family:${f.css}">Заголовок</div><div class="font-sub" style="font-family:${f.css}">Текст сайта</div>`,
-    'Шрифт', f.name,
-    () => pick('font', f.css, f.name)
-  );
-  fg.appendChild(card);
+// Build font controls
+const fc = document.getElementById('font-controls');
+FONTS.forEach(f => {
+  const item = document.createElement('div');
+  item.className = 'select-item';
+  item.textContent = f.name;
+  item.style.fontFamily = f.family;
+  item.dataset.fontBtn = '1';
+  item.dataset.fontName = f.name;
+  item.onclick = () => applyFont(f.family, f.name);
+  fc.appendChild(item);
 });
 
-// Build radius
-const rg = document.getElementById('radius-grid');
-RADIUS.forEach((r, i) => {
-  const card = makeCard('r'+i,
-    `<div class="radius-demo" style="border-radius:${r.px}"></div>`,
-    'Углы', r.name,
-    () => pick('radius', r.px, r.name)
-  );
-  rg.appendChild(card);
+// Build radius controls
+const rc = document.getElementById('radius-controls');
+RADIUS.forEach(r => {
+  const item = document.createElement('div');
+  item.className = 'select-item';
+  item.textContent = r.name;
+  item.dataset.radiusBtn = '1';
+  item.dataset.radiusName = r.name;
+  item.onclick = () => applyRadius(r.px, r.name);
+  rc.appendChild(item);
 });
 
-// Build animations
-const ag = document.getElementById('anim-grid');
-ANIMS.forEach((a, i) => {
-  const card = makeCard('a'+i,
-    `<div class="${a.cls}"><div class="anim-box"></div></div>`,
-    'Анимация', a.name,
-    () => pick('animation', a.cls, a.name)
-  );
-  ag.appendChild(card);
-});
-
-// Nav
-document.querySelectorAll('.nav-item').forEach(item => {
-  item.onclick = () => {
-    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    item.classList.add('active');
-    document.getElementById(item.dataset.section).classList.add('active');
-  };
+// Build animation controls
+const ac = document.getElementById('anim-controls');
+ANIMS.forEach(a => {
+  const item = document.createElement('div');
+  item.className = 'select-item';
+  item.textContent = a.name;
+  item.dataset.animBtn = '1';
+  item.dataset.animName = a.name;
+  item.onclick = () => applyAnim(a.anim, a.name);
+  ac.appendChild(item);
 });
 
 function updatePresetBar() {
   const chips = document.getElementById('preset-chips');
-  const entries = Object.entries(preset);
+  const entries = Object.entries(preset).filter(([,v]) => v);
   if (entries.length === 0) {
-    chips.innerHTML = '<span style="color:#444;font-size:12px">Ничего не выбрано</span>';
+    chips.innerHTML = '<span style="color:#444;font-size:12px">Пресет пуст</span>';
     return;
   }
   chips.innerHTML = entries.map(([cat, v]) =>
-    `<span class="chip">${getCatName(cat)}: ${v.label}</span>`
+    `<span class="chip">${getCatName(cat)}: ${v}</span>`
   ).join('');
 }
 
@@ -474,34 +556,32 @@ function getCatName(cat) {
 }
 
 function getPresetText() {
-  const entries = Object.entries(preset);
-  if (entries.length === 0) return 'Пресет пустой — выбери хотя бы что-нибудь';
-  const lines = entries.map(([cat, v]) => `${getCatName(cat)} ${v.label}`);
+  const entries = Object.entries(preset).filter(([,v]) => v);
+  if (entries.length === 0) return 'Пресет пустой';
+  const lines = entries.map(([cat, v]) => `${getCatName(cat)} ${v}`);
   return '🎨 Пресет:\n' + lines.join('\n');
 }
 
-function showToast(msg, duration = 3000) {
+function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), duration);
-}
-
-function copyPreset() {
-  const text = getPresetText();
-  navigator.clipboard.writeText(text).then(() => showToast('Скопировано! Отправь это Диме'));
+  setTimeout(() => t.classList.remove('show'), 3000);
 }
 
 function savePreset() {
-  const entries = Object.entries(preset);
-  if (entries.length === 0) { showToast('Сначала выбери хотя бы что-нибудь'); return; }
+  const entries = Object.entries(preset).filter(([,v]) => v);
+  if (entries.length === 0) { showToast('Выбери хотя бы один параметр'); return; }
   const text = getPresetText();
   const blob = new Blob([text], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url; a.download = 'preset.txt'; a.click();
-  showToast('Пресет сохранён! Отправь файл Диме 📎');
+  showToast('Пресет сохранён! 📎');
 }
+
+// Apply default color
+applyColor('#6c63ff', 'Фиолетовый');
 </script>
 
 </body>
