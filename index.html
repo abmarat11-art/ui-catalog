@@ -3,406 +3,337 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Demo Builder — Дима</title>
+  <title>ДК — Демо Каталог</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #f0f2f5;
-      --panel-bg: #ffffff;
-      --panel-border: #e2e8f0;
-      --text: #1e293b;
-      --muted: #64748b;
-      --accent: #6366f1;
-      --accent-text: #ffffff;
-
-      /* Demo app colors */
-      --d-bg: #f8fafc;
-      --d-sidebar: #1e293b;
-      --d-sidebar-text: #cbd5e1;
-      --d-sidebar-active: #6366f1;
-      --d-header: #ffffff;
-      --d-header-border: #e2e8f0;
-      --d-card: #ffffff;
-      --d-card-border: #e2e8f0;
-      --d-text: #1e293b;
-      --d-muted: #64748b;
-      --d-accent: #6366f1;
-      --d-badge: #ef4444;
-      --d-success: #22c55e;
-      --d-warning: #f59e0b;
-      --d-info: #3b82f6;
-      --d-nav-bg: #1e293b;
-      --d-nav-text: #94a3b8;
-      --d-nav-active-bg: rgba(99,102,241,0.15);
-      --d-nav-active-text: #6366f1;
+      --bg: #0f0f13;
+      --surface: #1a1a24;
+      --border: #2a2a38;
+      --text: #e8e8f0;
+      --muted: #888899;
+      --accent: #6c63ff;
+      --btn-radius: 100px;
+      --border-radius: 8px;
+      --font-family: 'Segoe UI', system-ui, sans-serif;
     }
 
     body {
       background: var(--bg);
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      font-family: var(--font-family);
+      min-height: 100vh;
       display: flex;
       height: 100vh;
       overflow: hidden;
     }
 
     /* ===== LEFT PANEL ===== */
-    .builder-panel {
-      width: 190px;
-      min-width: 190px;
-      background: var(--panel-bg);
-      border-right: 1px solid var(--panel-border);
-      display: flex;
-      flex-direction: column;
+    .control-panel {
+      width: 220px;
+      min-width: 220px;
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      padding: 20px 14px 120px;
       overflow-y: auto;
-      z-index: 10;
+      flex-shrink: 0;
     }
 
-    .builder-header {
-      padding: 16px 14px 10px;
-      border-bottom: 1px solid var(--panel-border);
-    }
-    .builder-logo {
+    .panel-brand {
       font-size: 13px;
       font-weight: 700;
       color: var(--accent);
-      letter-spacing: -0.2px;
+      margin-bottom: 2px;
     }
-    .builder-subtitle {
+    .panel-brand-sub {
       font-size: 10px;
       color: var(--muted);
-      margin-top: 2px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      margin-bottom: 18px;
     }
 
-    .builder-section {
-      padding: 10px 14px 4px;
-    }
-
-    .section-label {
-      font-size: 9px;
-      font-weight: 700;
+    .panel-title {
+      font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--muted);
-      margin-bottom: 8px;
+      margin-top: 18px;
+      margin-bottom: 10px;
+      font-weight: 700;
     }
+    .panel-title:first-of-type { margin-top: 0; }
 
-    /* Style cards */
-    .style-cards {
-      display: flex;
+    /* Color swatches */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
       gap: 6px;
-      flex-wrap: wrap;
     }
-    .style-card {
-      flex: 1;
-      min-width: 46px;
-      padding: 8px 6px;
-      border-radius: 8px;
-      border: 2px solid var(--panel-border);
+    .color-swatch {
+      aspect-ratio: 1;
+      border-radius: 6px;
+      border: 2px solid transparent;
       cursor: pointer;
-      text-align: center;
-      font-size: 10px;
-      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .color-swatch:hover { transform: scale(1.08); border-color: rgba(255,255,255,0.4); }
+    .color-swatch.selected { border-color: white; box-shadow: 0 0 0 2px var(--accent); }
+
+    /* Select items */
+    .select-group { display: flex; flex-direction: column; gap: 5px; }
+    .select-item {
+      padding: 9px 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
       color: var(--muted);
       transition: all 0.15s;
-      background: var(--panel-bg);
-    }
-    .style-card .style-dot {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      margin: 0 auto 4px;
-    }
-    .style-card:hover { border-color: var(--accent); color: var(--accent); }
-    .style-card.active { border-color: var(--accent); color: var(--accent); background: rgba(99,102,241,0.06); }
-
-    /* Sphere select */
-    .sphere-select {
-      width: 100%;
-      padding: 7px 8px;
-      font-size: 11px;
-      border: 1px solid var(--panel-border);
-      border-radius: 6px;
-      background: var(--panel-bg);
-      color: var(--text);
-      font-family: inherit;
-      cursor: pointer;
-      outline: none;
-    }
-    .sphere-select:focus { border-color: var(--accent); }
-
-    /* Toggle rows */
-    .toggle-list { display: flex; flex-direction: column; gap: 1px; }
-    .toggle-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 5px 0;
-      border-bottom: 1px solid #f1f5f9;
     }
-    .toggle-row:last-child { border-bottom: none; }
-    .toggle-info { display: flex; align-items: center; gap: 6px; }
-    .toggle-icon { font-size: 13px; }
-    .toggle-name { font-size: 11px; color: var(--text); font-weight: 500; }
-    .toggle-desc { font-size: 9px; color: var(--muted); }
+    .select-item:hover { border-color: #44445a; color: var(--text); }
+    .select-item.selected { background: rgba(108,99,255,0.15); border-color: var(--accent); color: var(--text); }
+    .select-item-preview {
+      font-size: 11px;
+      opacity: 0.6;
+    }
 
-    .toggle-switch {
-      width: 30px;
-      height: 16px;
-      background: #cbd5e1;
-      border-radius: 100px;
-      position: relative;
-      cursor: pointer;
-      transition: background 0.2s;
-      flex-shrink: 0;
-      border: none;
-      outline: none;
-    }
-    .toggle-switch::after {
-      content: '';
-      width: 12px;
-      height: 12px;
-      background: white;
-      border-radius: 50%;
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      transition: left 0.2s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-    .toggle-switch.on { background: var(--accent); }
-    .toggle-switch.on::after { left: 16px; }
-
-    /* Open button */
-    .builder-footer {
-      margin-top: auto;
-      padding: 12px 14px;
-      border-top: 1px solid var(--panel-border);
-    }
-    .open-btn {
-      width: 100%;
-      padding: 9px 12px;
+    /* Button preview row */
+    .btn-preview {
+      padding: 6px 14px;
       background: var(--accent);
       color: white;
       border: none;
-      border-radius: 8px;
-      font-size: 12px;
+      border-radius: var(--btn-radius);
+      font-size: 11px;
       font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
-      transition: opacity 0.15s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
+      cursor: default;
+      font-family: var(--font-family);
+      pointer-events: none;
     }
-    .open-btn:hover { opacity: 0.85; }
 
     /* ===== RIGHT DEMO AREA ===== */
     .demo-area {
       flex: 1;
-      background: var(--bg);
+      background: #1a1a26;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      padding: 20px;
+      padding: 28px;
     }
 
+    /* The "window" frame */
     .demo-window {
       width: 100%;
-      max-width: 860px;
-      height: calc(100vh - 40px);
-      max-height: 700px;
-      background: var(--d-bg);
-      border-radius: 12px;
-      box-shadow: 0 4px 32px rgba(0,0,0,0.12), 0 1px 3px rgba(0,0,0,0.08);
+      max-width: 820px;
+      height: calc(100vh - 56px);
+      max-height: 680px;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2);
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      font-family: var(--font-family);
+      color: #1e293b;
     }
 
-    /* Demo top nav */
-    .d-nav {
-      background: var(--d-nav-bg);
+    /* Window chrome dots */
+    .window-chrome {
+      background: #f1f5f9;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 10px 16px;
       display: flex;
       align-items: center;
-      padding: 0 16px;
-      height: 44px;
+      gap: 6px;
       flex-shrink: 0;
-      gap: 4px;
     }
-    .d-nav-logo {
-      font-size: 13px;
+    .chrome-dot {
+      width: 11px; height: 11px;
+      border-radius: 50%;
+    }
+    .chrome-dot.red { background: #ff5f57; }
+    .chrome-dot.yellow { background: #febc2e; }
+    .chrome-dot.green { background: #28c840; }
+    .chrome-url {
+      margin-left: 10px;
+      flex: 1;
+      background: #e2e8f0;
+      border-radius: 5px;
+      padding: 3px 10px;
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    /* Demo app nav */
+    .app-nav {
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      height: 46px;
+      flex-shrink: 0;
+      gap: 2px;
+    }
+    .app-nav-logo {
+      font-size: 14px;
       font-weight: 700;
-      color: white;
-      margin-right: 12px;
-      white-space: nowrap;
+      color: rgba(255,255,255,0.95);
+      margin-right: 14px;
+      font-family: var(--font-family);
     }
-    .d-nav-items { display: flex; gap: 2px; flex: 1; overflow: hidden; }
-    .d-nav-item {
-      padding: 5px 10px;
+    .app-nav-item {
+      padding: 5px 11px;
       border-radius: 6px;
       font-size: 11px;
-      color: var(--d-nav-text);
-      cursor: pointer;
-      white-space: nowrap;
+      color: rgba(255,255,255,0.7);
+      cursor: default;
       display: flex;
       align-items: center;
       gap: 4px;
-      transition: all 0.15s;
+      font-family: var(--font-family);
     }
-    .d-nav-item:hover { background: rgba(255,255,255,0.08); color: white; }
-    .d-nav-item.active { background: var(--d-nav-active-bg); color: var(--d-nav-active-text); }
-    .d-nav-badge {
-      background: var(--d-badge);
+    .app-nav-item.active {
+      background: rgba(255,255,255,0.18);
       color: white;
+    }
+    .app-nav-badge {
+      background: rgba(255,255,255,0.9);
+      color: var(--accent);
       border-radius: 100px;
       font-size: 9px;
       padding: 1px 5px;
       font-weight: 700;
     }
-    .d-nav-right {
+    .app-nav-right {
+      margin-left: auto;
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-left: auto;
     }
-    .d-nav-search {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.12);
+    .app-nav-search {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
       border-radius: 6px;
       padding: 4px 10px;
       font-size: 11px;
-      color: #94a3b8;
+      color: rgba(255,255,255,0.8);
       width: 110px;
+      font-family: var(--font-family);
     }
-    .d-nav-notif {
+    .app-avatar {
       width: 28px; height: 28px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 6px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 13px;
-      cursor: pointer;
-      position: relative;
-    }
-    .d-nav-notif-badge {
-      position: absolute;
-      top: 2px; right: 2px;
-      width: 7px; height: 7px;
-      background: var(--d-badge);
-      border-radius: 50%;
-      border: 1px solid var(--d-nav-bg);
-    }
-    .d-nav-avatar {
-      width: 26px; height: 26px;
-      background: var(--d-accent);
-      border-radius: 6px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 7px;
       display: flex; align-items: center; justify-content: center;
       font-size: 10px;
       font-weight: 700;
       color: white;
     }
 
-    /* Demo sub-header (breadcrumb) */
-    .d-subheader {
-      background: var(--d-header);
-      border-bottom: 1px solid var(--d-header-border);
-      padding: 8px 20px;
+    /* App subheader */
+    .app-subheader {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 10px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-shrink: 0;
     }
-    .d-breadcrumb { font-size: 11px; color: var(--d-muted); }
-    .d-breadcrumb strong { color: var(--d-text); }
-    .d-subheader-btn {
-      padding: 6px 14px;
-      background: var(--d-accent);
+    .app-breadcrumb { font-size: 11px; color: #94a3b8; }
+    .app-breadcrumb strong { color: #1e293b; }
+    .app-action-btn {
+      padding: 7px 16px;
+      background: var(--accent);
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: var(--btn-radius);
       font-size: 11px;
       font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
+      cursor: default;
+      font-family: var(--font-family);
     }
 
-    /* Demo content */
-    .d-content {
+    /* App content */
+    .app-content {
       flex: 1;
       overflow-y: auto;
-      padding: 16px 20px;
+      padding: 18px 20px;
+      background: #f8fafc;
     }
-
-    .d-page-title { font-size: 18px; font-weight: 700; color: var(--d-text); margin-bottom: 2px; }
-    .d-page-sub { font-size: 11px; color: var(--d-muted); margin-bottom: 16px; }
+    .app-page-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 2px;
+      font-family: var(--font-family);
+      border-radius: var(--border-radius);
+    }
+    .app-page-sub { font-size: 11px; color: #94a3b8; margin-bottom: 16px; }
 
     /* KPI cards */
-    .d-kpi-row { display: flex; gap: 12px; margin-bottom: 16px; }
-    .d-kpi {
+    .kpi-row { display: flex; gap: 12px; margin-bottom: 16px; }
+    .kpi-card {
       flex: 1;
-      background: var(--d-card);
-      border: 1px solid var(--d-card-border);
-      border-radius: 10px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--border-radius);
       padding: 14px 16px;
       position: relative;
     }
-    .d-kpi-icon {
-      position: absolute;
-      top: 12px; right: 12px;
-      font-size: 18px;
-      opacity: 0.3;
-    }
-    .d-kpi-label { font-size: 10px; color: var(--d-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
-    .d-kpi-value { font-size: 26px; font-weight: 700; color: var(--d-text); line-height: 1; margin-bottom: 4px; }
-    .d-kpi-delta { font-size: 10px; }
-    .d-kpi-delta.up { color: var(--d-success); }
-    .d-kpi-delta.down { color: var(--d-badge); }
-    .d-kpi-delta.neutral { color: var(--d-muted); }
+    .kpi-icon { position: absolute; top: 12px; right: 12px; font-size: 18px; opacity: 0.25; }
+    .kpi-label { font-size: 10px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    .kpi-value { font-size: 26px; font-weight: 700; color: #0f172a; line-height: 1; margin-bottom: 4px; font-family: var(--font-family); }
+    .kpi-delta { font-size: 10px; color: #22c55e; }
+    .kpi-delta.down { color: #ef4444; }
+    .kpi-delta.neutral { color: #94a3b8; }
 
-    /* Two-column layout */
-    .d-two-col { display: flex; gap: 12px; }
-    .d-col-main { flex: 1; min-width: 0; }
-    .d-col-side { width: 220px; flex-shrink: 0; }
+    /* Two-column */
+    .two-col { display: flex; gap: 12px; }
+    .col-main { flex: 1; min-width: 0; }
+    .col-side { width: 210px; flex-shrink: 0; }
 
-    /* Table */
-    .d-card {
-      background: var(--d-card);
-      border: 1px solid var(--d-card-border);
-      border-radius: 10px;
+    /* Cards & table */
+    .app-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--border-radius);
       overflow: hidden;
       margin-bottom: 12px;
     }
-    .d-card-header {
-      padding: 12px 16px 8px;
+    .app-card-header {
+      padding: 11px 16px 9px;
       font-size: 12px;
       font-weight: 600;
-      color: var(--d-text);
-      border-bottom: 1px solid var(--d-card-border);
+      color: #1e293b;
+      border-bottom: 1px solid #f1f5f9;
+      font-family: var(--font-family);
     }
-    .d-table { width: 100%; border-collapse: collapse; font-size: 11px; }
-    .d-table th {
+    .app-table { width: 100%; border-collapse: collapse; font-size: 11px; font-family: var(--font-family); }
+    .app-table th {
       text-align: left;
       padding: 8px 12px;
-      color: var(--d-muted);
+      color: #94a3b8;
       font-weight: 600;
       font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.3px;
-      border-bottom: 1px solid var(--d-card-border);
+      border-bottom: 1px solid #f1f5f9;
     }
-    .d-table td {
+    .app-table td {
       padding: 9px 12px;
-      color: var(--d-text);
+      color: #334155;
       border-bottom: 1px solid #f8fafc;
     }
-    .d-table tr:last-child td { border-bottom: none; }
-    .d-table tr:hover td { background: #f8fafc; }
+    .app-table tr:last-child td { border-bottom: none; }
 
-    .d-badge {
+    .badge {
       display: inline-flex;
       align-items: center;
       padding: 2px 8px;
@@ -410,582 +341,411 @@
       font-size: 10px;
       font-weight: 600;
     }
-    .d-badge.green { background: #dcfce7; color: #16a34a; }
-    .d-badge.blue { background: #dbeafe; color: #1d4ed8; }
-    .d-badge.yellow { background: #fef9c3; color: #a16207; }
-    .d-badge.red { background: #fee2e2; color: #dc2626; }
-    .d-badge.gray { background: #f1f5f9; color: #64748b; }
+    .badge.green { background: #dcfce7; color: #16a34a; }
+    .badge.blue { background: #dbeafe; color: #1d4ed8; }
+    .badge.yellow { background: #fef9c3; color: #a16207; }
+    .badge.gray { background: #f1f5f9; color: #64748b; }
 
     /* Activity feed */
-    .d-activity-list { display: flex; flex-direction: column; }
-    .d-activity-item {
+    .activity-item {
       display: flex;
       align-items: flex-start;
       gap: 10px;
       padding: 10px 16px;
-      border-bottom: 1px solid var(--d-card-border);
+      border-bottom: 1px solid #f1f5f9;
     }
-    .d-activity-item:last-child { border-bottom: none; }
-    .d-activity-dot {
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot {
       width: 26px; height: 26px;
-      border-radius: 6px;
+      border-radius: 7px;
       display: flex; align-items: center; justify-content: center;
       font-size: 12px;
       flex-shrink: 0;
-      margin-top: 1px;
     }
-    .d-activity-dot.green { background: #dcfce7; }
-    .d-activity-dot.blue { background: #dbeafe; }
-    .d-activity-dot.yellow { background: #fef9c3; }
-    .d-activity-body { min-width: 0; }
-    .d-activity-title { font-size: 11px; font-weight: 600; color: var(--d-text); }
-    .d-activity-sub { font-size: 10px; color: var(--d-muted); margin-top: 1px; }
+    .activity-dot.green { background: #dcfce7; }
+    .activity-dot.blue { background: #dbeafe; }
+    .activity-dot.yellow { background: #fef9c3; }
+    .activity-title { font-size: 11px; font-weight: 600; color: #1e293b; font-family: var(--font-family); }
+    .activity-sub { font-size: 10px; color: #94a3b8; margin-top: 1px; }
 
-    /* ===== STYLE THEMES ===== */
-
-    /* Tech (dark) */
-    body.theme-tech {
-      --bg: #0d1117;
-      --panel-bg: #161b22;
-      --panel-border: #21262d;
-      --text: #e6edf3;
-      --muted: #7d8590;
-      --accent: #58a6ff;
+    /* ===== PRESET BAR ===== */
+    .preset-bar {
+      position: fixed;
+      bottom: 0; left: 0;
+      width: 220px;
+      background: #0c0c10;
+      border-top: 1px solid var(--border);
+      padding: 12px 14px;
+      z-index: 100;
     }
-    body.theme-tech .d-nav { background: #161b22; border-bottom: 1px solid #21262d; }
-    body.theme-tech .d-nav-search { background: rgba(255,255,255,0.05); border-color: #21262d; }
-    body.theme-tech { --d-bg: #0d1117; --d-header: #161b22; --d-header-border: #21262d; --d-card: #161b22; --d-card-border: #21262d; --d-text: #e6edf3; --d-muted: #7d8590; --d-accent: #58a6ff; --d-nav-bg: #010409; }
-    body.theme-tech .d-table tr:hover td { background: #1c2128; }
-    body.theme-tech .d-table td { border-bottom-color: #21262d; }
-    body.theme-tech .d-badge.green { background: #0d2818; color: #3fb950; }
-    body.theme-tech .d-badge.blue { background: #0c1d36; color: #58a6ff; }
-    body.theme-tech .d-badge.yellow { background: #272115; color: #e3b341; }
-    body.theme-tech .d-badge.gray { background: #21262d; color: #7d8590; }
-    body.theme-tech .builder-panel { background: #161b22; border-color: #21262d; }
-    body.theme-tech .section-label { color: #7d8590; }
-    body.theme-tech .toggle-row { border-color: #21262d; }
-    body.theme-tech .toggle-name { color: #e6edf3; }
-    body.theme-tech .sphere-select { background: #0d1117; color: #e6edf3; border-color: #21262d; }
-    body.theme-tech .style-card { background: #0d1117; color: #7d8590; border-color: #21262d; }
-    body.theme-tech .style-card.active { border-color: #58a6ff; color: #58a6ff; background: rgba(88,166,255,0.06); }
-    body.theme-tech .builder-footer { border-color: #21262d; }
-    body.theme-tech .builder-header { border-color: #21262d; }
-    body.theme-tech .d-subheader { background: #161b22; border-color: #21262d; }
-    body.theme-tech .d-breadcrumb strong { color: #e6edf3; }
-
-    /* Энергия (dark + orange) */
-    body.theme-energy {
-      --bg: #111111;
-      --panel-bg: #1a1a1a;
-      --panel-border: #2a2a2a;
-      --text: #f5f5f5;
-      --muted: #888888;
-      --accent: #f97316;
+    .preset-chips { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; min-height: 20px; }
+    .chip {
+      padding: 3px 8px;
+      border-radius: 100px;
+      font-size: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
     }
-    body.theme-energy .d-nav { background: #0a0a0a; }
-    body.theme-energy { --d-bg: #111111; --d-header: #1a1a1a; --d-header-border: #2a2a2a; --d-card: #1a1a1a; --d-card-border: #2a2a2a; --d-text: #f5f5f5; --d-muted: #888888; --d-accent: #f97316; --d-nav-bg: #0a0a0a; }
-    body.theme-energy .d-table tr:hover td { background: #222222; }
-    body.theme-energy .d-table td { border-bottom-color: #2a2a2a; }
-    body.theme-energy .d-badge.green { background: #14291a; color: #4ade80; }
-    body.theme-energy .d-badge.blue { background: #0f2040; color: #60a5fa; }
-    body.theme-energy .d-badge.yellow { background: #2a1f00; color: #fbbf24; }
-    body.theme-energy .d-badge.gray { background: #222; color: #888; }
-    body.theme-energy .builder-panel { background: #1a1a1a; border-color: #2a2a2a; }
-    body.theme-energy .section-label { color: #888; }
-    body.theme-energy .toggle-row { border-color: #2a2a2a; }
-    body.theme-energy .toggle-name { color: #f5f5f5; }
-    body.theme-energy .sphere-select { background: #111; color: #f5f5f5; border-color: #2a2a2a; }
-    body.theme-energy .style-card { background: #111; color: #888; border-color: #2a2a2a; }
-    body.theme-energy .style-card.active { border-color: #f97316; color: #f97316; background: rgba(249,115,22,0.08); }
-    body.theme-energy .builder-footer { border-color: #2a2a2a; }
-    body.theme-energy .builder-header { border-color: #2a2a2a; }
-    body.theme-energy .d-subheader { background: #1a1a1a; border-color: #2a2a2a; }
-    body.theme-energy .d-breadcrumb strong { color: #f5f5f5; }
-    body.theme-energy .d-kpi { --d-card: #1a1a1a; }
+    .save-btn {
+      width: 100%;
+      padding: 8px 12px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      font-family: var(--font-family);
+    }
+    .save-btn:hover { opacity: 0.85; }
 
-    /* ===== SEPARATOR ===== */
-    .section-sep { height: 1px; background: var(--panel-border); margin: 4px 0; }
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      top: 20px; right: 20px;
+      background: #222232;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 13px;
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: all 0.2s;
+      z-index: 999;
+      color: var(--text);
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
   </style>
 </head>
-<body class="theme-minimal">
+<body>
 
-<!-- LEFT BUILDER PANEL -->
-<div class="builder-panel">
-  <div class="builder-header">
-    <div class="builder-logo">Demo Builder</div>
-    <div class="builder-subtitle">Панель разработчика</div>
-  </div>
+<!-- LEFT PANEL -->
+<div class="control-panel">
+  <div class="panel-brand">ДК</div>
+  <div class="panel-brand-sub">Демо Каталог</div>
 
-  <!-- СТИЛЬ -->
-  <div class="builder-section">
-    <div class="section-label">Стиль</div>
-    <div class="style-cards">
-      <div class="style-card active" onclick="setTheme('minimal', this)">
-        <div class="style-dot" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)"></div>
-        Минимал
-      </div>
-      <div class="style-card" onclick="setTheme('tech', this)">
-        <div class="style-dot" style="background:linear-gradient(135deg,#0d1117,#58a6ff)"></div>
-        Tech
-      </div>
-      <div class="style-card" onclick="setTheme('energy', this)">
-        <div class="style-dot" style="background:linear-gradient(135deg,#111,#f97316)"></div>
-        Энергия
-      </div>
-    </div>
-  </div>
+  <div class="panel-title">🎨 Цвет</div>
+  <div class="color-grid" id="color-grid"></div>
 
-  <div class="section-sep"></div>
+  <div class="panel-title">🔘 Кнопки</div>
+  <div class="select-group" id="button-group"></div>
 
-  <!-- СФЕРА -->
-  <div class="builder-section">
-    <div class="section-label">Сфера</div>
-    <select class="sphere-select" onchange="setSphere(this.value)">
-      <option value="logistics">Логистика / Доставка</option>
-      <option value="crm">CRM / Клиенты</option>
-      <option value="warehouse">Склад / Производство</option>
-      <option value="finance">Финансы / Учёт</option>
-    </select>
-  </div>
+  <div class="panel-title">✏️ Шрифт</div>
+  <div class="select-group" id="font-group"></div>
 
-  <div class="section-sep"></div>
+  <div class="panel-title">📐 Углы</div>
+  <div class="select-group" id="radius-group"></div>
 
-  <!-- РАЗДЕЛЫ -->
-  <div class="builder-section">
-    <div class="section-label">Разделы</div>
-    <div class="toggle-list" id="sections-list"></div>
-  </div>
-
-  <div class="section-sep"></div>
-
-  <!-- ФУНКЦИИ -->
-  <div class="builder-section">
-    <div class="section-label">Функции</div>
-    <div class="toggle-list" id="features-list"></div>
-  </div>
-
-  <div class="builder-footer">
-    <button class="open-btn" onclick="openForClient()">
-      ↗ Открыть для клиента
-    </button>
-  </div>
+  <div class="panel-title">✨ Анимация</div>
+  <div class="select-group" id="anim-group"></div>
 </div>
 
-<!-- RIGHT DEMO WINDOW -->
+<!-- RIGHT DEMO AREA -->
 <div class="demo-area">
-  <div class="demo-window" id="demo-window">
+  <div class="demo-window">
+    <!-- Browser chrome -->
+    <div class="window-chrome">
+      <div class="chrome-dot red"></div>
+      <div class="chrome-dot yellow"></div>
+      <div class="chrome-dot green"></div>
+      <div class="chrome-url">demo.myapp.uz / Дашборд</div>
+    </div>
 
-    <!-- Top nav -->
-    <div class="d-nav" id="d-nav">
-      <div class="d-nav-logo" id="d-app-name">TransExpress</div>
-      <div class="d-nav-items" id="d-nav-items"></div>
-      <div class="d-nav-right">
-        <div class="d-nav-search" id="d-search-box" style="display:none">🔍 Поиск...</div>
-        <div class="d-nav-notif" id="d-notif-icon" style="display:none">🔔<div class="d-nav-notif-badge"></div></div>
-        <div class="d-nav-avatar" id="d-avatar">АК</div>
+    <!-- App nav -->
+    <div class="app-nav" id="app-nav">
+      <div class="app-nav-logo">MyApp</div>
+      <div class="app-nav-item active">Дашборд</div>
+      <div class="app-nav-item">Заказы <span class="app-nav-badge">8</span></div>
+      <div class="app-nav-item">Клиенты</div>
+      <div class="app-nav-item">Аналитика</div>
+      <div class="app-nav-item">Настройки</div>
+      <div class="app-nav-right">
+        <div class="app-nav-search">🔍 Поиск...</div>
+        <div class="app-avatar">АК</div>
       </div>
     </div>
 
     <!-- Sub-header -->
-    <div class="d-subheader">
-      <div class="d-breadcrumb">Главная / <strong id="d-breadcrumb-page">Дашборд</strong></div>
-      <button class="d-subheader-btn" id="d-action-btn">+ Новая доставка</button>
+    <div class="app-subheader">
+      <div class="app-breadcrumb">Главная / <strong>Дашборд</strong></div>
+      <button class="app-action-btn" id="action-btn">+ Новый заказ</button>
     </div>
 
-    <!-- Main content -->
-    <div class="d-content" id="d-content"></div>
+    <!-- Content -->
+    <div class="app-content">
+      <div class="app-page-title">Дашборд</div>
+      <div class="app-page-sub">Обзор за сегодня, 15 июня 2026</div>
 
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-icon">📦</div>
+          <div class="kpi-label">Заказов сегодня</div>
+          <div class="kpi-value">47</div>
+          <div class="kpi-delta">↑ +12% к вчера</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon">🚚</div>
+          <div class="kpi-label">В обработке</div>
+          <div class="kpi-value">12</div>
+          <div class="kpi-delta down">↓ −3 к вчера</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon">💰</div>
+          <div class="kpi-label">Выручка (млн сум)</div>
+          <div class="kpi-value">28.4</div>
+          <div class="kpi-delta">↑ +8%</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="col-main">
+          <div class="app-card">
+            <div class="app-card-header">Последние заказы</div>
+            <table class="app-table">
+              <thead>
+                <tr>
+                  <th>ID</th><th>Клиент</th><th>Сумма</th><th>Статус</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>#1847</td><td>ООО "Технопарк"</td><td>4 500 000 сум</td><td><span class="badge blue">В работе</span></td></tr>
+                <tr><td>#1846</td><td>Алишер Сандоф</td><td>1 200 000 сум</td><td><span class="badge green">Выполнен</span></td></tr>
+                <tr><td>#1845</td><td>MegaStore</td><td>8 700 000 сум</td><td><span class="badge yellow">Ожидает</span></td></tr>
+                <tr><td>#1844</td><td>ИП Рашидов</td><td>2 100 000 сум</td><td><span class="badge green">Выполнен</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-side">
+          <div class="app-card">
+            <div class="app-card-header">Активность</div>
+            <div class="activity-item">
+              <div class="activity-dot green">✓</div>
+              <div><div class="activity-title">#1846 выполнен</div><div class="activity-sub">5 мин назад</div></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot blue">📦</div>
+              <div><div class="activity-title">Новый заказ #1847</div><div class="activity-sub">12 мин назад</div></div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot yellow">⏳</div>
+              <div><div class="activity-title">#1845 ожидает оплаты</div><div class="activity-sub">24 мин назад</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
+<!-- PRESET BAR -->
+<div class="preset-bar">
+  <div class="preset-chips" id="preset-chips">
+    <span style="color:#444;font-size:11px">Пресет пуст</span>
+  </div>
+  <button class="save-btn" onclick="savePreset()">💾 Сохранить пресет</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-// ===== DATA =====
-const SPHERES = {
-  logistics: {
-    appName: 'TransExpress',
-    avatar: 'АК',
-    actionBtn: '+ Новая доставка',
-    breadcrumb: 'Дашборд',
-    sections: [
-      { id: 'dashboard', name: 'Дашборд', icon: '📊', on: true },
-      { id: 'orders', name: 'Заказы', icon: '📦', badge: 8, on: true },
-      { id: 'deliveries', name: 'Доставки', icon: '🚚', badge: 12, on: true },
-      { id: 'drivers', name: 'Водители', icon: '👤', on: true },
-      { id: 'map', name: 'Карта', icon: '🗺️', on: true },
-      { id: 'warehouse', name: 'Склад', icon: '🏭', on: false },
-      { id: 'clients', name: 'Клиенты', icon: '🤝', on: true },
-      { id: 'analytics', name: 'Аналитика', icon: '📈', on: true },
-      { id: 'settings', name: 'Настройки', icon: '⚙️', on: true },
-    ],
-    features: [
-      { id: 'notif', name: 'Уведомления', desc: 'Push, SMS, Telegram', icon: '🔔', on: true },
-      { id: 'gps', name: 'GPS-трекинг', desc: 'Отслеживание', icon: '📍', on: true },
-      { id: 'routes', name: 'Оптим. маршрутов', desc: 'Алгоритмизация', icon: '🗺️', on: true },
-      { id: 'export', name: 'Экспорт отчётов', desc: 'Excel, PDF', icon: '📤', on: true },
-    ],
-    renderContent() {
-      return `
-        <div class="d-page-title">Дашборд</div>
-        <div class="d-page-sub">Обзор за сегодня, 15 июня 2026</div>
-        <div class="d-kpi-row">
-          <div class="d-kpi"><div class="d-kpi-icon">📦</div><div class="d-kpi-label">Доставок сегодня</div><div class="d-kpi-value">47</div><div class="d-kpi-delta up">↑ +12% к вчера</div></div>
-          <div class="d-kpi"><div class="d-kpi-icon">🚚</div><div class="d-kpi-label">В пути</div><div class="d-kpi-value">12</div><div class="d-kpi-delta down">↓ −3 к вчера</div></div>
-          <div class="d-kpi"><div class="d-kpi-icon">👤</div><div class="d-kpi-label">Активных водителей</div><div class="d-kpi-value">8</div><div class="d-kpi-delta neutral">из 10 всего</div></div>
-        </div>
-        <div class="d-two-col">
-          <div class="d-col-main">
-            <div class="d-card">
-              <div class="d-card-header">Последние доставки</div>
-              <table class="d-table">
-                <thead><tr><th>ID</th><th>Клиент</th><th>Адрес</th><th>Водитель</th><th>Статус</th></tr></thead>
-                <tbody>
-                  <tr><td>#TX-2847</td><td>ООО "Технопарк"</td><td>ул. Навои, 42</td><td>Азиз Р.</td><td><span class="d-badge blue">В пути</span></td></tr>
-                  <tr><td>#TX-2846</td><td>Сандоф Алишер</td><td>Чиланзар, 9 кв</td><td>Бахром К.</td><td><span class="d-badge green">Доставлен</span></td></tr>
-                  <tr><td>#TX-2845</td><td>MegaStore</td><td>ТЦ Мега, зона С</td><td>—</td><td><span class="d-badge yellow">Ожидает</span></td></tr>
-                  <tr><td>#TX-2844</td><td>ИП Рашидов</td><td>Юнусабад, 7</td><td>Тимур А.</td><td><span class="d-badge green">Доставлен</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="d-col-side">
-            <div class="d-card">
-              <div class="d-card-header">Активность</div>
-              <div class="d-activity-list">
-                <div class="d-activity-item"><div class="d-activity-dot green">✓</div><div class="d-activity-body"><div class="d-activity-title">#TX-2846 доставлен</div><div class="d-activity-sub">5 мин назад</div></div></div>
-                <div class="d-activity-item"><div class="d-activity-dot blue">📍</div><div class="d-activity-body"><div class="d-activity-title">Азиз Р. выехал на маршрут</div><div class="d-activity-sub">12 мин назад</div></div></div>
-                <div class="d-activity-item"><div class="d-activity-dot yellow">⏳</div><div class="d-activity-body"><div class="d-activity-title">#TX-2845 ожидает</div><div class="d-activity-sub">24 мин назад</div></div></div>
-              </div>
-            </div>
-          </div>
-        </div>`;
-    }
-  },
-  crm: {
-    appName: 'ClaroCRM',
-    avatar: 'НА',
-    actionBtn: '+ Новая сделка',
-    breadcrumb: 'Дашборд',
-    sections: [
-      { id: 'dashboard', name: 'Дашборд', icon: '📊', on: true },
-      { id: 'clients', name: 'Клиенты', icon: '🤝', on: true },
-      { id: 'deals', name: 'Сделки', icon: '💼', badge: 5, on: true },
-      { id: 'tasks', name: 'Задачи', icon: '✅', badge: 3, on: true },
-      { id: 'calendar', name: 'Календарь', icon: '📅', on: true },
-      { id: 'reports', name: 'Отчёты', icon: '📈', on: true },
-      { id: 'settings', name: 'Настройки', icon: '⚙️', on: true },
-    ],
-    features: [
-      { id: 'notif', name: 'Уведомления', desc: 'Email, Telegram', icon: '🔔', on: true },
-      { id: 'pipeline', name: 'Воронка продаж', desc: 'Kanban', icon: '🔀', on: true },
-      { id: 'analytics', name: 'Аналитика', desc: 'Дашборды', icon: '📊', on: true },
-      { id: 'export', name: 'Экспорт', desc: 'Excel, PDF', icon: '📤', on: false },
-    ],
-    renderContent() {
-      return `
-        <div class="d-page-title">Дашборд</div>
-        <div class="d-page-sub">CRM — обзор за 15 июня 2026</div>
-        <div class="d-kpi-row">
-          <div class="d-kpi"><div class="d-kpi-icon">🤝</div><div class="d-kpi-label">Клиентов</div><div class="d-kpi-value">124</div><div class="d-kpi-delta up">↑ +8 за месяц</div></div>
-          <div class="d-kpi"><div class="d-kpi-icon">💼</div><div class="d-kpi-label">Сделок в работе</div><div class="d-kpi-value">31</div><div class="d-kpi-delta neutral">на сумму 48 млн сум</div></div>
-          <div class="d-kpi"><div class="d-kpi-icon">✅</div><div class="d-kpi-label">Закрыто сделок</div><div class="d-kpi-value">9</div><div class="d-kpi-delta up">↑ +3 к прошлой неделе</div></div>
-        </div>
-        <div class="d-two-col">
-          <div class="d-col-main">
-            <div class="d-card">
-              <div class="d-card-header">Активные сделки</div>
-              <table class="d-table">
-                <thead><tr><th>Клиент</th><th>Сумма</th><th>Стадия</th><th>Менеджер</th><th>Статус</th></tr></thead>
-                <tbody>
-                  <tr><td>АО "Ташкентэнерго"</td><td>18 500 000 сум</td><td>Переговоры</td><td>Нодира А.</td><td><span class="d-badge blue">Активна</span></td></tr>
-                  <tr><td>ООО "Строймаш"</td><td>7 200 000 сум</td><td>КП отправлено</td><td>Бахром К.</td><td><span class="d-badge yellow">Ожидание</span></td></tr>
-                  <tr><td>ИП Рашидова З.</td><td>3 000 000 сум</td><td>Подписание</td><td>Азиз Р.</td><td><span class="d-badge green">Закрывается</span></td></tr>
-                  <tr><td>MegaTrade</td><td>22 000 000 сум</td><td>Знакомство</td><td>Тимур А.</td><td><span class="d-badge gray">Новая</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="d-col-side">
-            <div class="d-card">
-              <div class="d-card-header">Задачи на сегодня</div>
-              <div class="d-activity-list">
-                <div class="d-activity-item"><div class="d-activity-dot blue">📞</div><div class="d-activity-body"><div class="d-activity-title">Звонок Ташкентэнерго</div><div class="d-activity-sub">14:00 • Нодира А.</div></div></div>
-                <div class="d-activity-item"><div class="d-activity-dot yellow">📄</div><div class="d-activity-body"><div class="d-activity-title">КП для Строймаш</div><div class="d-activity-sub">До 17:00 • Бахром К.</div></div></div>
-                <div class="d-activity-item"><div class="d-activity-dot green">✓</div><div class="d-activity-body"><div class="d-activity-title">Договор Рашидова — готов</div><div class="d-activity-sub">Выполнено</div></div></div>
-              </div>
-            </div>
-          </div>
-        </div>`;
-    }
-  },
-  warehouse: {
-    appName: 'SkladPro',
-    avatar: 'ШМ',
-    actionBtn: '+ Приход товара',
-    breadcrumb: 'Дашборд',
-    sections: [
-      { id: 'dashboard', name: 'Дашборд', icon: '📊', on: true },
-      { id: 'stock', name: 'Остатки', icon: '📦', on: true },
-      { id: 'income', name: 'Приход', icon: '⬇️', badge: 2, on: true },
-      { id: 'movement', name: 'Движение', icon: '🔀', on: true },
-      { id: 'writeoff', name: 'Списание', icon: '🗑️', on: true },
-      { id: 'orders', name: 'Заказы', icon: '📋', on: true },
-      { id: 'reports', name: 'Отчёты', icon: '📈', on: true },
-      { id: 'settings', name: 'Настройки', icon: '⚙️', on: true },
-    ],
-    features: [
-      { id: 'barcode', name: 'Штрихкоды', desc: 'Сканирование', icon: '📷', on: true },
-      { id: 'reserve', name: 'Резервирование', desc: 'Под заказы', icon: '🔒', on: true },
-      { id: 'alerts', name: 'Алерты остатков', desc: 'Мин. порог', icon: '⚠️', on: true },
-      { id: 'export', name: 'Экспорт', desc: 'Excel, PDF', icon: '📤', on: true },
-    ],
-    renderContent() {
-      return `
-        <div class="d-page-title">Дашборд</div>
-        <div class="d-page-sub">Складской учёт — 15 июня 2026</div>
-        <div class="d-kpi-row">
-          <div class="d-kpi"><div class="d-kpi-icon">📦</div><div class="d-kpi-label">Позиций на складе</div><div class="d-kpi-value">312</div><div class="d-kpi-delta neutral">3 склада</div></div>
-          <div class="d-kpi"><div class="d-kpi-icon">⬇️</div><div class="d-kpi-label">Приход сегодня</div><div class="d-kpi-value">18</div><div class="d-kpi-delta up">↑ +5 позиций</div></div>
-          <div class="d-kpi"><div class="d-kpi-icon">⚠️</div><div class="d-kpi-label">Критический запас</div><div class="d-kpi-value">4</div><div class="d-kpi-delta down">Нужен заказ</div></div>
-        </div>
-        <div class="d-two-col">
-          <div class="d-col-main">
-            <div class="d-card">
-              <div class="d-card-header">Остатки (топ позиции)</div>
-              <table class="d-table">
-                <thead><tr><th>Материал</th><th>Склад</th><th>Остаток</th><th>Ед.</th><th>Статус</th></tr></thead>
-                <tbody>
-                  <tr><td>Арматура Ø12</td><td>Главный</td><td>4 200</td><td>кг</td><td><span class="d-badge green">В норме</span></td></tr>
-                  <tr><td>Уголок 50×50</td><td>Главный</td><td>850</td><td>кг</td><td><span class="d-badge green">В норме</span></td></tr>
-                  <tr><td>Лист 4мм</td><td>Цех №1</td><td>120</td><td>кг</td><td><span class="d-badge yellow">Мало</span></td></tr>
-                  <tr><td>Электроды Э42</td><td>Цех №1</td><td>18</td><td>уп.</td><td><span class="d-badge red">Критично</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="d-col-side">
-            <div class="d-card">
-              <div class="d-card-header">Последние операции</div>
-              <div class="d-activity-list">
-                <div class="d-activity-item"><div class="d-activity-dot green">⬇️</div><div class="d-activity-body"><div class="d-activity-title">Приход: Арматура Ø12</div><div class="d-activity-sub">2 000 кг • 1 час назад</div></div></div>
-                <div class="d-activity-item"><div class="d-activity-dot blue">🔀</div><div class="d-activity-body"><div class="d-activity-title">Передача в Цех №1</div><div class="d-activity-sub">Лист 4мм, 50 кг</div></div></div>
-                <div class="d-activity-item"><div class="d-activity-dot yellow">⚠️</div><div class="d-activity-body"><div class="d-activity-title">Мин. запас: Электроды</div><div class="d-activity-sub">Остаток 18 уп.</div></div></div>
-              </div>
-            </div>
-          </div>
-        </div>`;
-    }
-  },
-  finance: {
-    appName: 'FinControl',
-    avatar: 'НХ',
-    actionBtn: '+ Новая операция',
-    breadcrumb: 'Дашборд',
-    sections: [
-      { id: 'dashboard', name: 'Дашборд', icon: '📊', on: true },
-      { id: 'income', name: 'Доходы', icon: '💰', on: true },
-      { id: 'expense', name: 'Расходы', icon: '📉', on: true },
-      { id: 'cashflow', name: 'Движение', icon: '🔀', badge: 3, on: true },
-      { id: 'accounts', name: 'Счета', icon: '🏦', on: true },
-      { id: 'reports', name: 'Отчёты', icon: '📈', on: true },
-      { id: 'settings', name: 'Настройки', icon: '⚙️', on: true },
-    ],
-    features: [
-      { id: 'budget', name: 'Бюджетирование', desc: 'По статьям', icon: '📋', on: true },
-      { id: 'alerts', name: 'Алерты', desc: 'Превышение лимитов', icon: '⚠️', on: true },
-      { id: 'multicurrency', name: 'Мультивалюта', desc: 'UZS, USD', icon: '💱', on: true },
-      { id: 'export', name: 'Экспорт', desc: 'Excel, PDF', icon: '📤', on: true },
-    ],
-    renderContent() {
-      return `
-        <div class="d-page-title">Дашборд</div>
-        <div class="d-page-sub">Финансовый учёт — июнь 2026</div>
-        <div class="d-kpi-row">
-          <div class="d-kpi"><div class="d-kpi-icon">💰</div><div class="d-kpi-label">Доходы (июнь)</div><div class="d-kpi-value">124М</div><div class="d-kpi-delta up">↑ +18% к маю</div></div>
-          <div class="d-kpi"><div class="d-kpi-icon">📉</div><div class="d-kpi-label">Расходы (июнь)</div><div class="d-kpi-value">89М</div><div class="d-kpi-delta neutral">−5% к плану</div></div>
-          <div class="d-kpi"><div class="d-kpi-icon">📊</div><div class="d-kpi-label">Прибыль</div><div class="d-kpi-value">35М</div><div class="d-kpi-delta up">↑ Маржа 28%</div></div>
-        </div>
-        <div class="d-two-col">
-          <div class="d-col-main">
-            <div class="d-card">
-              <div class="d-card-header">Последние операции</div>
-              <table class="d-table">
-                <thead><tr><th>Дата</th><th>Описание</th><th>Сумма</th><th>Счёт</th><th>Тип</th></tr></thead>
-                <tbody>
-                  <tr><td>15.06</td><td>Оплата от АО "Ташкентэнерго"</td><td>+18 500 000 сум</td><td>Основной</td><td><span class="d-badge green">Доход</span></td></tr>
-                  <tr><td>14.06</td><td>Закупка материалов</td><td>−6 200 000 сум</td><td>Основной</td><td><span class="d-badge red">Расход</span></td></tr>
-                  <tr><td>14.06</td><td>ЗП сотрудникам</td><td>−22 000 000 сум</td><td>Зарплатный</td><td><span class="d-badge red">Расход</span></td></tr>
-                  <tr><td>13.06</td><td>Оплата от MegaTrade</td><td>+9 000 000 сум</td><td>Основной</td><td><span class="d-badge green">Доход</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="d-col-side">
-            <div class="d-card">
-              <div class="d-card-header">Счета</div>
-              <div class="d-activity-list">
-                <div class="d-activity-item"><div class="d-activity-dot green">🏦</div><div class="d-activity-body"><div class="d-activity-title">Основной счёт</div><div class="d-activity-sub">87 340 000 сум</div></div></div>
-                <div class="d-activity-item"><div class="d-activity-dot blue">💰</div><div class="d-activity-body"><div class="d-activity-title">Зарплатный</div><div class="d-activity-sub">12 000 000 сум</div></div></div>
-                <div class="d-activity-item"><div class="d-activity-dot yellow">💱</div><div class="d-activity-body"><div class="d-activity-title">USD-счёт</div><div class="d-activity-sub">$4 200</div></div></div>
-              </div>
-            </div>
-          </div>
-        </div>`;
-    }
+const COLORS = [
+  { name: 'Фиолетовый', hex: '#6c63ff' },
+  { name: 'Синий', hex: '#3b82f6' },
+  { name: 'Голубой', hex: '#06b6d4' },
+  { name: 'Зелёный', hex: '#22c55e' },
+  { name: 'Изумруд', hex: '#10b981' },
+  { name: 'Оранжевый', hex: '#f97316' },
+  { name: 'Розовый', hex: '#ec4899' },
+  { name: 'Красный', hex: '#ef4444' },
+  { name: 'Жёлтый', hex: '#eab308' },
+  { name: 'Серо-синий', hex: '#64748b' },
+  { name: 'Индиго', hex: '#4f46e5' },
+  { name: 'Лиловый', hex: '#a855f7' },
+];
+
+const BUTTONS = [
+  { name: 'Округлый', radius: '100px', preview: '●●●' },
+  { name: 'Мягкий', radius: '10px', preview: '▬▬▬' },
+  { name: 'Квадратный', radius: '4px', preview: '■■■' },
+];
+
+const FONTS = [
+  { name: 'Segoe UI', family: "'Segoe UI', system-ui, sans-serif" },
+  { name: 'Inter', family: "'Inter', 'Helvetica Neue', sans-serif" },
+  { name: 'Georgia', family: 'Georgia, serif' },
+  { name: 'Trebuchet', family: "'Trebuchet MS', sans-serif" },
+];
+
+const RADIUS = [
+  { name: 'Острые', px: '0px' },
+  { name: 'Мягкие', px: '8px' },
+  { name: 'Округлые', px: '14px' },
+  { name: 'Очень округлые', px: '22px' },
+];
+
+const ANIMS = [
+  { name: 'Нет', value: 'none' },
+  { name: 'Плавный вход', value: 'fade' },
+  { name: 'Скользящий', value: 'slide' },
+];
+
+let preset = {};
+
+// Apply helpers
+function applyColor(hex, name) {
+  document.documentElement.style.setProperty('--accent', hex);
+  // Update nav and buttons in demo
+  document.querySelectorAll('.app-nav, .app-action-btn, .save-btn').forEach(el => {
+    if (el.classList.contains('app-nav')) el.style.background = hex;
+    if (el.classList.contains('app-action-btn')) el.style.background = hex;
+    if (el.classList.contains('save-btn')) el.style.background = hex;
+  });
+  preset.color = name;
+  updateChips();
+  document.querySelectorAll('[data-color]').forEach(el => {
+    el.classList.toggle('selected', el.dataset.color === name);
+  });
+}
+
+function applyButton(radius, name) {
+  document.documentElement.style.setProperty('--btn-radius', radius);
+  preset.button = name;
+  updateChips();
+  document.querySelectorAll('[data-button]').forEach(el => {
+    el.classList.toggle('selected', el.dataset.button === name);
+  });
+}
+
+function applyFont(family, name) {
+  document.documentElement.style.setProperty('--font-family', family);
+  preset.font = name;
+  updateChips();
+  document.querySelectorAll('[data-font]').forEach(el => {
+    el.classList.toggle('selected', el.dataset.font === name);
+  });
+}
+
+function applyRadius(px, name) {
+  document.documentElement.style.setProperty('--border-radius', px);
+  preset.radius = name;
+  updateChips();
+  document.querySelectorAll('[data-radius]').forEach(el => {
+    el.classList.toggle('selected', el.dataset.radius === name);
+  });
+}
+
+function applyAnim(value, name) {
+  preset.animation = name;
+  updateChips();
+  document.querySelectorAll('[data-anim]').forEach(el => {
+    el.classList.toggle('selected', el.dataset.anim === name);
+  });
+}
+
+// Build color grid
+const cg = document.getElementById('color-grid');
+COLORS.forEach(c => {
+  const el = document.createElement('div');
+  el.className = 'color-swatch';
+  el.style.backgroundColor = c.hex;
+  el.title = c.name;
+  el.dataset.color = c.name;
+  el.onclick = () => applyColor(c.hex, c.name);
+  cg.appendChild(el);
+});
+
+// Build button group
+const bg = document.getElementById('button-group');
+BUTTONS.forEach(b => {
+  const el = document.createElement('div');
+  el.className = 'select-item';
+  el.dataset.button = b.name;
+  el.innerHTML = `<span>${b.name}</span><button class="btn-preview" style="border-radius:${b.radius};pointer-events:none;font-size:10px;padding:4px 10px">Кнопка</button>`;
+  el.onclick = () => applyButton(b.radius, b.name);
+  bg.appendChild(el);
+});
+
+// Build font group
+const fg = document.getElementById('font-group');
+FONTS.forEach(f => {
+  const el = document.createElement('div');
+  el.className = 'select-item';
+  el.dataset.font = f.name;
+  el.style.fontFamily = f.family;
+  el.textContent = f.name;
+  el.onclick = () => applyFont(f.family, f.name);
+  fg.appendChild(el);
+});
+
+// Build radius group
+const rg = document.getElementById('radius-group');
+RADIUS.forEach(r => {
+  const el = document.createElement('div');
+  el.className = 'select-item';
+  el.dataset.radius = r.name;
+  el.textContent = r.name;
+  el.onclick = () => applyRadius(r.px, r.name);
+  rg.appendChild(el);
+});
+
+// Build anim group
+const ag = document.getElementById('anim-group');
+ANIMS.forEach(a => {
+  const el = document.createElement('div');
+  el.className = 'select-item';
+  el.dataset.anim = a.name;
+  el.textContent = a.name;
+  el.onclick = () => applyAnim(a.value, a.name);
+  ag.appendChild(el);
+});
+
+// Preset chips
+function updateChips() {
+  const chips = document.getElementById('preset-chips');
+  const entries = Object.entries(preset).filter(([, v]) => v);
+  if (!entries.length) {
+    chips.innerHTML = '<span style="color:#444;font-size:11px">Пресет пуст</span>';
+    return;
   }
-};
-
-let currentSphere = 'logistics';
-let currentTheme = 'minimal';
-
-// ===== THEME =====
-function setTheme(theme, el) {
-  currentTheme = theme;
-  document.body.className = 'theme-' + theme;
-  document.querySelectorAll('.style-card').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
+  const icons = { color: '🎨', button: '🔘', font: '✏️', radius: '📐', animation: '✨' };
+  chips.innerHTML = entries.map(([k, v]) =>
+    `<span class="chip">${icons[k] || k}: ${v}</span>`
+  ).join('');
 }
 
-// ===== SPHERE =====
-function setSphere(sphereId) {
-  currentSphere = sphereId;
-  renderBuilderPanel();
-  renderDemo();
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-// ===== RENDER BUILDER PANEL =====
-function renderBuilderPanel() {
-  const sphere = SPHERES[currentSphere];
-
-  // Sections
-  const secList = document.getElementById('sections-list');
-  secList.innerHTML = sphere.sections.map(s => `
-    <div class="toggle-row">
-      <div class="toggle-info">
-        <span class="toggle-icon">${s.icon}</span>
-        <div>
-          <div class="toggle-name">${s.name}</div>
-        </div>
-      </div>
-      <button class="toggle-switch ${s.on ? 'on' : ''}" onclick="toggleSection('${s.id}', this)"></button>
-    </div>
-  `).join('');
-
-  // Features
-  const featList = document.getElementById('features-list');
-  featList.innerHTML = sphere.features.map(f => `
-    <div class="toggle-row">
-      <div class="toggle-info">
-        <span class="toggle-icon">${f.icon}</span>
-        <div>
-          <div class="toggle-name">${f.name}</div>
-          <div class="toggle-desc">${f.desc}</div>
-        </div>
-      </div>
-      <button class="toggle-switch ${f.on ? 'on' : ''}" onclick="toggleFeature('${f.id}', this)"></button>
-    </div>
-  `).join('');
+function savePreset() {
+  const entries = Object.entries(preset).filter(([, v]) => v);
+  if (!entries.length) { showToast('Выбери хотя бы один параметр'); return; }
+  const icons = { color: '🎨', button: '🔘', font: '✏️', radius: '📐', animation: '✨' };
+  const text = '🎨 Пресет ДК:\n' + entries.map(([k, v]) => `${icons[k]} ${v}`).join('\n');
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'preset-dk.txt';
+  a.click();
+  showToast('Пресет сохранён! Отправь файл Диме 📎');
 }
 
-// ===== TOGGLE SECTION =====
-function toggleSection(id, btn) {
-  const sphere = SPHERES[currentSphere];
-  const sec = sphere.sections.find(s => s.id === id);
-  if (sec) {
-    sec.on = !sec.on;
-    btn.classList.toggle('on', sec.on);
-    renderNavItems();
-  }
-}
-
-// ===== TOGGLE FEATURE =====
-function toggleFeature(id, btn) {
-  const sphere = SPHERES[currentSphere];
-  const feat = sphere.features.find(f => f.id === id);
-  if (feat) {
-    feat.on = !feat.on;
-    btn.classList.toggle('on', feat.on);
-    applyFeatures();
-  }
-}
-
-// ===== RENDER DEMO =====
-function renderDemo() {
-  const sphere = SPHERES[currentSphere];
-  document.getElementById('d-app-name').textContent = sphere.appName;
-  document.getElementById('d-avatar').textContent = sphere.avatar;
-  document.getElementById('d-action-btn').textContent = sphere.actionBtn;
-  document.getElementById('d-breadcrumb-page').textContent = sphere.breadcrumb;
-  renderNavItems();
-  document.getElementById('d-content').innerHTML = sphere.renderContent();
-  applyFeatures();
-}
-
-function renderNavItems() {
-  const sphere = SPHERES[currentSphere];
-  const nav = document.getElementById('d-nav-items');
-  const visible = sphere.sections.filter(s => s.on);
-  nav.innerHTML = visible.map((s, i) => `
-    <div class="d-nav-item ${i === 0 ? 'active' : ''}" onclick="setActiveNav(this)">
-      ${s.name}
-      ${s.badge ? `<span class="d-nav-badge">${s.badge}</span>` : ''}
-    </div>
-  `).join('');
-}
-
-function setActiveNav(el) {
-  document.querySelectorAll('.d-nav-item').forEach(n => n.classList.remove('active'));
-  el.classList.add('active');
-}
-
-function applyFeatures() {
-  const sphere = SPHERES[currentSphere];
-  const notif = sphere.features.find(f => f.id === 'notif');
-  const notifIcon = document.getElementById('d-notif-icon');
-  const searchBox = document.getElementById('d-search-box');
-  if (notifIcon) notifIcon.style.display = (notif && notif.on) ? 'flex' : 'none';
-  if (searchBox) searchBox.style.display = 'block';
-}
-
-// ===== OPEN FOR CLIENT =====
-function openForClient() {
-  const sphere = SPHERES[currentSphere];
-  const html = `<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>${sphere.appName}</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:#f8fafc;color:#1e293b}
-.nav{background:#1e293b;display:flex;align-items:center;padding:0 20px;height:48px;gap:4px}
-.nav-logo{font-size:14px;font-weight:700;color:white;margin-right:16px}
-.nav-item{padding:6px 12px;border-radius:6px;font-size:12px;color:#94a3b8;cursor:pointer}
-.nav-item.active{background:rgba(99,102,241,0.2);color:#818cf8}
-.content{padding:28px 32px}
-.page-title{font-size:22px;font-weight:700;margin-bottom:4px}
-.page-sub{font-size:12px;color:#64748b;margin-bottom:20px}
-</style>
-</head>
-<body>
-<div class="nav">
-  <div class="nav-logo">${sphere.appName}</div>
-  ${sphere.sections.filter(s=>s.on).map((s,i)=>`<div class="nav-item ${i===0?'active':''}">${s.name}</div>`).join('')}
-</div>
-<div class="content">
-  <div class="page-title">Добро пожаловать в ${sphere.appName}</div>
-  <div class="page-sub">Демонстрационная версия интерфейса</div>
-  <p style="color:#64748b;font-size:14px">Здесь будет полноценный интерфейс приложения.</p>
-</div>
-</body>
-</html>`;
-  const blob = new Blob([html], {type:'text/html'});
-  window.open(URL.createObjectURL(blob), '_blank');
-}
-
-// ===== INIT =====
-renderBuilderPanel();
-renderDemo();
+// Init defaults
+applyColor('#6c63ff', 'Фиолетовый');
+applyButton('100px', 'Округлый');
+applyFont("'Segoe UI', system-ui, sans-serif", 'Segoe UI');
+applyRadius('8px', 'Мягкие');
+applyAnim('none', 'Нет');
+// Clear preset after init (defaults don't count)
+preset = {};
+updateChips();
 </script>
 
 </body>
